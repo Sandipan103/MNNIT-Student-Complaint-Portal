@@ -1,0 +1,158 @@
+
+// model required
+const User = require("../models/UserModel");
+const Otp = require("../models/OtpModel");
+const Profile = require("../models/ProfileModel");
+
+
+// dependency required
+const otpGenerator = require("otp-generator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+
+// send otp
+exports.sendOtp = async (req, res) => {
+  try {
+    // step-1 : fetch email
+    const { email } = req.body;
+
+    // step-2 : find if email exist or not
+    const user = await User.findOne({ email });
+    // if user present then he can't register twice
+    if (user) {   
+      return res.status(401).json({
+        success: false,
+        message: `email already registered`,
+      });
+    }
+
+    // step-4 : generate random 6 digit otp
+    let otp = otpGenerator.generate(6, {
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+    });
+
+    // step-5 : send otp (this will send the otp in user mail first after that the otp will save in database for 5 minutes)
+    const otpBody = await Otp.create({ email, otp });
+    res.status(200).json({
+      success: true,
+      message: `otp send successfully`,
+      otp,
+    });
+  } catch (error) {
+    console.log("otp sending error : ", error);
+    return res.status(401).json({
+      success: false,
+      message: `otp sending failed`,
+    });
+  }
+};
+
+// signup
+exports.signup = async (req, res) => {
+  try {
+    // step-1 : fetch data
+    const { firstName, lastName, contactNo, email, password, otp } = req.body;
+
+    // step-2 : name validation (not null no number and special char)
+
+    // step-3 : password validation (length > 8, capital + special char + number)
+
+    // step-4 : email matching
+    // ** here we add the email matching  (@mnnit.ac.in)  after testing**
+
+    // step-5 : email already present or not
+    const emailAlreadyPresent = await User.findOne({ email });
+    // if user present then he can't register twice
+    if (emailAlreadyPresent) {
+      return res.status(401).json({
+        success: false,
+        message: `email already registered`,
+      });
+    }
+
+    
+
+    // step-6 : find latest otp with this email, and verify
+    const recentOtps = await Otp.find({ email }).sort({ createdAt: -1 });
+
+    if (recentOtps.length === 0) {
+      return res.status(401).json({
+        success: false,
+        message: `otp is not found with this email id`,
+      });
+    }
+
+    if (recentOtps[0].otp !== otp) {
+      // console.log('recentOtps : ', recentOtps);
+      return res.status(401).json({
+        success: false,
+        message: `incorrect otp`,
+      });
+    }
+
+    // step-7 : hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // step-8 : create profile for user
+    // **  initial profile photo will set here from name  ** 
+    const profileDetail = await Profile.create({})
+
+    // step-7 : create user
+    const user = await User.create({
+        firstName : firstName,
+        lastName : lastName,
+        contactNo : contactNo,
+        email : email,
+        password : hashedPassword,
+        additionalDetails : profileDetail._id,
+    })
+
+    return res.status(200).json({
+        success : true,
+        message : `user created successfully`,
+    })
+
+  } catch (error) {
+    console.log("signup error : ", error);
+    return res.status(401).json({
+      success: false,
+      message: `somthing went wrong while signup`,
+    });
+  }
+};
+
+
+
+// login
+exports.login = async (req, res) => {
+  try {
+    // step-1 : fetch data
+    const { email, password } = req.body;
+
+    // step-2 : find emial is registered or not
+
+    // step-3 : match the password with user hashed password
+
+    // step-4 : generate jwt token
+
+    // step-5 : save user data in cashe
+
+    // step-6 : login
+
+    return res.status(200).json({
+        success : true,
+        message : `user lggedin successfully`,
+    })
+
+  } catch (error) {
+    console.log("signup error : ", error);
+    return res.status(401).json({
+      success: false,
+      message: `somthing went wrong while login`,
+    });
+  }
+};
