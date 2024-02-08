@@ -12,8 +12,23 @@ const userSchema = new mongoose.Schema({
         required : true,
         trim : true,
     },
+    gender : {
+        type : String,
+    },
+    dateOfBirth : {
+        type : String,
+    },
+    image : {
+        type : String,
+    },
     contactNo : {
         type : String,
+    },
+    regNo : {
+        type : String,
+    },
+    hostel:{
+        type :String,
     },
     email : {
         type : String,
@@ -24,11 +39,18 @@ const userSchema = new mongoose.Schema({
         type : String,
         required : true,
     },
-    additionalDetails : {
-        type : mongoose.Schema.Types.ObjectId,
-        required : true,
-        ref : "Profile",
-    },
+    pendingComplaints: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Complaint'
+    }],
+    ongoingComplaints: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Complaint'
+    }],
+    solvedComplaints: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Complaint'
+    }],
     token : {
         type : String,
     },

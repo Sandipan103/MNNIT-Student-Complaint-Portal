@@ -1,16 +1,14 @@
 
+
 // model required
 const User = require("../models/UserModel");
 const Otp = require("../models/OtpModel");
-const Profile = require("../models/ProfileModel");
-
 
 // dependency required
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-
 
 // send otp
 exports.sendOtp = async (req, res) => {
@@ -21,7 +19,7 @@ exports.sendOtp = async (req, res) => {
     // step-2 : find if email exist or not
     const user = await User.findOne({ email });
     // if user present then he can't register twice
-    if (user) {   
+    if (user) {
       return res.status(401).json({
         success: false,
         message: `email already registered`,
@@ -74,8 +72,6 @@ exports.signup = async (req, res) => {
       });
     }
 
-    
-
     // step-6 : find latest otp with this email, and verify
     const recentOtps = await Otp.find({ email }).sort({ createdAt: -1 });
 
@@ -97,25 +93,21 @@ exports.signup = async (req, res) => {
     // step-7 : hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // step-8 : create profile for user
-    // **  initial profile photo will set here from name  ** 
-    const profileDetail = await Profile.create({})
+
 
     // step-7 : create user
     const user = await User.create({
-        firstName : firstName,
-        lastName : lastName,
-        contactNo : contactNo,
-        email : email,
-        password : hashedPassword,
-        additionalDetails : profileDetail._id,
-    })
+      firstName: firstName,
+      lastName: lastName,
+      contactNo: contactNo,
+      email: email,
+      password: hashedPassword,
+    });
 
     return res.status(200).json({
-        success : true,
-        message : `user created successfully`,
-    })
-
+      success: true,
+      message: `user created successfully`,
+    });
   } catch (error) {
     console.log("signup error : ", error);
     return res.status(401).json({
@@ -125,34 +117,71 @@ exports.signup = async (req, res) => {
   }
 };
 
-
-
 // login
 exports.login = async (req, res) => {
   try {
     // step-1 : fetch data
     const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(403).json({
+        success: false,
+        message: `all fields are required`,
+      });
+    }
 
     // step-2 : find emial is registered or not
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(402).json({
+        success: false,
+        message: `email is not registered`,
+      });
+    }
 
     // step-3 : match the password with user hashed password
+    const matchPassword = await bcrypt.compare(password, user.password);
 
-    // step-4 : generate jwt token
+    if(!matchPassword)  {
+      return res.status(400).json({
+        success: false,
+        message: `incorrect password`,
+      });
+    }
 
-    // step-5 : save user data in cashe
+    // step-4 : creating payload
+    const payload = {
+      email: user.email,
+      id: user._id,
+      //  **  we can add any other detail here **
+    };
 
-    // step-6 : login
+    // step-5 : generate jwt token
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: `2h`,
+    });
+    user.token = token;
+    user.password = undefined;
+    const options2 = {
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // after 24 hours
+      httpOnly: true,
+    };
+    
 
-    return res.status(200).json({
-        success : true,
-        message : `user lggedin successfully`,
-    })
-
+    // step-6 : save user data in cashe
+    // step-7 : login
+    res.cookie('token', token, options2).status(200).json({
+      success: true,
+      token,
+      user,
+      message: `user lgged in successfully`,
+    });
   } catch (error) {
-    console.log("signup error : ", error);
+    console.log("login error : ", error);
     return res.status(401).json({
       success: false,
       message: `somthing went wrong while login`,
     });
   }
 };
+
+
