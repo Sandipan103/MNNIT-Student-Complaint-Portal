@@ -1,7 +1,7 @@
 
 const mongoose = require('mongoose');
 
-const hostelCaretakerSchema = new mongoose.Schema({
+const CaretakerSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -19,15 +19,9 @@ const hostelCaretakerSchema = new mongoose.Schema({
     contactNo : {
         type : String,
     },
-    additionalDetails : {
-        type : mongoose.Schema.Types.ObjectId,
-        required : true,
-        ref : "Profile",
-    },
     hostel: {
-        type: String,
-        required: true,
-        trim: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hostel'
     },
     complaints: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -35,4 +29,5 @@ const hostelCaretakerSchema = new mongoose.Schema({
     }]
 });
 
-module.exports = mongoose.model('HostelCaretaker', hostelCaretakerSchema);
+module.exports = mongoose.model('Caretaker', CaretakerSchema);
+
