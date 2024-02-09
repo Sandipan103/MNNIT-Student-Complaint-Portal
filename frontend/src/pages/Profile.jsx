@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { TextField, Button, Avatar, Grid, CircularProgress, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
+import { Context, server } from "../index";
+import {useContext} from "react";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [editedData, setEditedData] = useState({});
   const [loading, setLoading] = useState(false); // State variable to indicate backend call loading
-
+  
+  const { isAuthenticated } = useContext(Context);
   const hostelOptions = [
     "R.N. Tagore Hostel",
     "C.V. Raman Hostel",
@@ -31,9 +34,7 @@ const Profile = () => {
         const decodedToken = jwtDecode(token);
         const { id: userId } = decodedToken;
 
-        const response = await axios.get(
-          `http://localhost:4000/api/v1/getUserProfileById/${userId}`
-        );
+        const response = await axios.get(`${server}/getUserProfileById/${userId}`);
         // console.log('decodedToken : ', decodedToken);
         console.log('userData : ', response.data.user);
         setUserData(response.data.user);
@@ -52,9 +53,6 @@ const Profile = () => {
       } finally {
         setLoading(false); // Set loading back to false after the API call completes
       }
-    }
-    else  {
-      navigate('/signup');
     }
   };
 
@@ -76,8 +74,7 @@ const Profile = () => {
     if (token) {
       try {
         setLoading(true); // Set loading to true before making the API call
-        const response = await axios.put(
-          `http://localhost:4000/api/v1/updateUserProfileById`,
+        const response = await axios.put(`${server}/updateUserProfileById`,
           {
             userId : userData._id,
             firstName : editedData.firstName,
@@ -96,7 +93,7 @@ const Profile = () => {
       }
     }
   };
-
+  if (!isAuthenticated) return <Navigate to={"/login"} />;
   return (
     <div>
       <h1>Profile Page</h1>

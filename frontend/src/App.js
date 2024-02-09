@@ -6,11 +6,14 @@ import LoginPage from "./pages/LoginPage";
 import ComplaintForm from "./pages/ComplaintForm";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
+import Navbar from "./component/Navbar";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <div>
       <Router>
+        <Navbar/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignupPage />} />
@@ -20,6 +23,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>
+      <Toaster/>
     </div>
   );
 }

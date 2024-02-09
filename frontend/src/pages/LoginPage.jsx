@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -12,8 +12,10 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import { Context, server } from "../index";
 
 const LoginPage = () => {
+  const {isAuthenticated,setIsAuthenticated} = useContext(Context);
   const navigate = useNavigate();
   const [userDetail, setUserDetail] = useState({
     email: "",
@@ -38,17 +40,18 @@ const LoginPage = () => {
     event.preventDefault();
     try {
       setLoading(true);
-      const response = await axios.post(
-        "http://localhost:4000/api/v1/login",
+      const response = await axios.post(`${server}/login`,
         { email: userDetail.email, password: userDetail.password },
         { withCredentials: true }
       );
+      setIsAuthenticated(true);
       // console.log("token : ", response.data.token);
       // console.log("user : ", response.data.user);
       Cookies.set("tokenf", response.data.token, {
         expires: 1,
       });
-      navigate(`/profile`);
+      console.log(isAuthenticated);
+      // navigate(`/profile`);
     } catch (error) {
       console.error("lgoin error", error);
     } finally {
@@ -56,6 +59,7 @@ const LoginPage = () => {
     }
   };
 
+  if (isAuthenticated) return <Navigate to={"/"} />;
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={12} sm={8} md={6} lg={4}>
@@ -115,6 +119,23 @@ const LoginPage = () => {
           )}
 
           {loading && <CircularProgress size={100} />}
+          {!isAuthenticated && (
+            <h4 style={{ margin: "20px", fontSize: "16px", color: "black" }}>
+              Not Signed Up ? Sign Up here
+            </h4>
+          )}
+
+          {/* Signup button */}
+          <Button
+            variant="outlined"
+            color="primary"
+            fullWidth
+            style={{ marginTop: "10px" }}
+            component={Link}
+            to="/signup"
+          >
+            Sign Up
+          </Button>
         </Paper>
       </Grid>
     </Grid>

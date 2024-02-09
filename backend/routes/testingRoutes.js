@@ -6,7 +6,7 @@ const router = express.Router();
 
 // importing required controler
 // auth controller
-const {sendOtp, signup, login, } = require('../controller/Auth');
+const {sendOtp, signup, login, logout, } = require('../controller/Auth');
 
 
 // profile controler
@@ -28,6 +28,8 @@ const  {createWarden } = require("../controller/Warden");
 router.post('/sendOtp' , sendOtp);
 router.post('/signup' , signup);
 router.post('/login' , login);
+router.get('/logout' , logout);
+
 
 
 // profile routing
