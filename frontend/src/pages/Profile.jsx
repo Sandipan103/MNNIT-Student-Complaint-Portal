@@ -3,13 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { TextField, Button, Avatar, Grid, CircularProgress } from "@mui/material";
+import { TextField, Button, Avatar, Grid, CircularProgress, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [editedData, setEditedData] = useState({});
   const [loading, setLoading] = useState(false); // State variable to indicate backend call loading
+
+  const hostelOptions = [
+    "R.N. Tagore Hostel",
+    "C.V. Raman Hostel",
+    "P.D. Tandon Hostel",
+    "M.M. Malviya Hostel",
+    "B.G. Tilak Hostel",
+    "S.V. Patel Hostel",
+    "K.N. Girls Hostel",
+    "P.G. Boys Hostel",
+    "P.G. Girls Hostel"
+  ];
 
   const fetchUserDetail = async() => {
     const token = Cookies.get("tokenf");
@@ -23,9 +35,18 @@ const Profile = () => {
           `http://localhost:4000/api/v1/getUserProfileById/${userId}`
         );
         // console.log('decodedToken : ', decodedToken);
-        // console.log('userData : ', response.data.user);
+        console.log('userData : ', response.data.user);
         setUserData(response.data.user);
-        setEditedData(response.data.user);
+        setEditedData({
+          "firstName" : response.data.user.firstName,
+          "lastName" : response.data.user.lastName,
+          "email" : response.data.user.email,
+          "gender" : response.data.user.gender,
+          "dateOfBirth" : response.data.user.dateOfBirth,
+          "contactNo" : response.data.user.contactNo,
+          "regNo" : response.data.user.regNo,
+          "hostelName" : response.data.user.hostel.name,
+        });
       } catch (error) {
         console.error("Error decoding token:", error);
       } finally {
@@ -51,6 +72,7 @@ const Profile = () => {
 
   const handleSubmit = async () => {
     const token = Cookies.get("tokenf");
+    console.log('editedData : ', editedData);
     if (token) {
       try {
         setLoading(true); // Set loading to true before making the API call
@@ -64,7 +86,7 @@ const Profile = () => {
             dateOfBirth : editedData.dateOfBirth,
             contactNo : editedData.contactNo,
             regNo : editedData.regNo,
-            hostelName : editedData.hostel,
+            hostelName : editedData.hostelName,
           }
         );
       } catch (error) {
@@ -142,12 +164,20 @@ const Profile = () => {
               />
             </Grid>
             <Grid item>
-              <TextField
-                name="hostel"
-                label="Hostel"
-                value={editedData.hostel.name || ""}
-                onChange={handleChange}
-              />
+              <FormControl fullWidth>
+                <InputLabel id="hostelName-label">Hostel</InputLabel>
+                <Select
+                  labelId="hostelName-label"
+                  id="hostelName"
+                  name="hostelName"
+                  value={editedData.hostelName || ""}
+                  onChange={handleChange}
+                >
+                  {hostelOptions.map((hostel, index) => (
+                    <MenuItem key={index} value={hostel}>{hostel}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
           <Button variant="contained" onClick={handleSubmit}>
