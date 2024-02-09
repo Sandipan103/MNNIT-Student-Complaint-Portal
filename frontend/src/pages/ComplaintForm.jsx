@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
+import axios from "axios";
+
 import {
   Button,
   Container,
@@ -11,31 +16,45 @@ import {
 } from "@mui/material";
 
 const ComplaintForm = () => {
+  const navigate = useNavigate();
   const [categoryType, setCategoryType] = useState("");
-  const [subcategoryType, setSubcategoryType] = useState("");
+  const [subCategoryType, setSubCategoryType] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [additionalDetails, setAdditionalDetails] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // step-1 : validation (no empty field)
+    const token = Cookies.get("tokenf");
+    if(!token)  {
+      navigate('/signup');
+    }
+    try {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.id;
+      
+      const response = await axios.post(
+        `http://localhost:4000/api/v1/createPersonalComplaint`,
+        {
+          userId : userId,
+          categoryType : categoryType,
+          subCategoryType : subCategoryType,
+          title : title,
+          description : description,
+          additionalDetails : additionalDetails,
+        }
+      )
 
-    // step-2 : Send complaint data to backend
-    console.log({
-      categoryType,
-      subcategoryType,
-      title,
-      description,
-      additionalDetails,
-    });
+      console.log(response.data);
 
-    // step-3 : Reset form fields
-    setCategoryType("");
-    setSubcategoryType("");
-    setTitle("");
-    setDescription("");
-    setAdditionalDetails("");
+      setCategoryType("");
+      setSubCategoryType("");
+      setTitle("");
+      setDescription("");
+      setAdditionalDetails("");
+    } catch (error) {
+      console.error("Error creating complaint:", error);
+    }
   };
 
   return (
@@ -64,8 +83,8 @@ const ComplaintForm = () => {
               {categoryType === "personal" && (
                 <Select
                   id="subcategory"
-                  value={subcategoryType}
-                  onChange={(e) => setSubcategoryType(e.target.value)}
+                  value={subCategoryType}
+                  onChange={(e) => setSubCategoryType(e.target.value)}
                 >
                   <MenuItem value="electricity">Electricity Problem</MenuItem>
                   <MenuItem value="civil">Civil Problem</MenuItem>
@@ -76,8 +95,8 @@ const ComplaintForm = () => {
               {categoryType === "common" && (
                 <Select
                   id="subcategory"
-                  value={subcategoryType}
-                  onChange={(e) => setSubcategoryType(e.target.value)}
+                  value={subCategoryType}
+                  onChange={(e) => setSubCategoryType(e.target.value)}
                 >
                   <MenuItem value="water">Water Problem</MenuItem>
                   <MenuItem value="bathroom">Bathroom Problem</MenuItem>

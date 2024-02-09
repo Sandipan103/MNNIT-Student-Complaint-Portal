@@ -22,6 +22,8 @@ const Profile = () => {
         const response = await axios.get(
           `http://localhost:4000/api/v1/getUserProfileById/${userId}`
         );
+        // console.log('decodedToken : ', decodedToken);
+        // console.log('userData : ', response.data.user);
         setUserData(response.data.user);
         setEditedData(response.data.user);
       } catch (error) {
@@ -62,7 +64,7 @@ const Profile = () => {
             dateOfBirth : editedData.dateOfBirth,
             contactNo : editedData.contactNo,
             regNo : editedData.regNo,
-            hostel : editedData.hostel,
+            hostelName : editedData.hostel,
           }
         );
       } catch (error) {
@@ -143,7 +145,7 @@ const Profile = () => {
               <TextField
                 name="hostel"
                 label="Hostel"
-                value={editedData.hostel || ""}
+                value={editedData.hostel.name || ""}
                 onChange={handleChange}
               />
             </Grid>

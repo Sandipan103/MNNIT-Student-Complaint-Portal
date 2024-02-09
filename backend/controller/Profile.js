@@ -2,13 +2,14 @@
 
 // model required
 const User = require("../models/UserModel");
+const Hostel = require("../models/HostelModel");
 
 // dependency required
 
-exports.getUserProfileById = async (req, res, next) => {
+exports.getUserProfileById = async (req, res) => {
   const userId = req.params.userId;
   try {
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findById(userId).select("-password").populate('hostel');
     if (!user) {
       return res.status(404).json({ 
         success: false, 
@@ -37,8 +38,17 @@ exports.updateUserProfileById = async (req, res, next) => {
     dateOfBirth,
     contactNo,
     regNo,
-    hostel,
+    hostelName,
   } = req.body;
+
+  const hostel = await Hostel.findOne({name : hostelName});
+
+    if (!hostel) {
+      return res.status(404).json({
+        success: false,
+        message: `Hostel not found`,
+      });
+    }
 
   const updatedData = {
     firstName,
@@ -47,8 +57,10 @@ exports.updateUserProfileById = async (req, res, next) => {
     dateOfBirth,
     contactNo,
     regNo,
-    hostel,
+    hostel : hostel._id,
   };
+
+  
 
   try {
     const user = await User.findByIdAndUpdate(userId, updatedData,

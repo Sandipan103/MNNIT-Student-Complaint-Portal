@@ -28,7 +28,8 @@ const userSchema = new mongoose.Schema({
         type : String,
     },
     hostel:{
-        type :String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hostel'
     },
     email : {
         type : String,

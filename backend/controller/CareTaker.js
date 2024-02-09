@@ -53,6 +53,9 @@ exports.createCaretaker = async (req, res) => {
         hostel: hostel._id,
     });
 
+    hostel.careTaker = caretaker._id;
+    await hostel.save();
+    
     return res.status(200).json({
       success: true,
       message: `caretaker created successfully`,

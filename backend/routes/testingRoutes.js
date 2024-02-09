@@ -8,9 +8,13 @@ const router = express.Router();
 // auth controller
 const {sendOtp, signup, login, } = require('../controller/Auth');
 
+
 // profile controler
 const {getUserProfileById, updateUserProfileById} = require('../controller/Profile');
 
+
+// complaint controller
+const {createPersonalComplaint} = require('../controller/Complaint');
 
 // 
 const {createHostel, } = require('../controller/Hostel');
@@ -32,6 +36,7 @@ router.put('/updateUserProfileById', updateUserProfileById);
 
 
 // complaint routing
+router.post('/createPersonalComplaint', createPersonalComplaint);
 
 
 

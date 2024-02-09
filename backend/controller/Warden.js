@@ -54,6 +54,9 @@ exports.createWarden= async (req, res) => {
         hostel: hostel._id,
     });
 
+    hostel.warden = warden._id;
+    await hostel.save();
+
     return res.status(200).json({
       success: true,
       message: `Warden created successfully`,

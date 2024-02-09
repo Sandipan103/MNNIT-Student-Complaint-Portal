@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const complaintSchema = new mongoose.Schema({
 
-    catagory: {
+    category: {
         categoryType: {
             type: String,
             enum: ['personal', 'common'],
@@ -12,18 +12,28 @@ const complaintSchema = new mongoose.Schema({
         subCategoryType: {
             type: String,
             required: function() {
-                return this.catagory.main === 'personal' || this.catagory.main === 'common';
+                return this.category.categoryType === 'personal' || this.category.categoryType === 'common';
             },
-            enum: function() {
-                if (this.catagory.main === 'personal') {
-                    return ['electricity', 'civil', 'clining', 'other'];
-                } else if (this.catagory.main === 'common') {
-                    return ['water', 'bathroom', 'light', 'other'];
-                } else {
-                    return [];
-                }
+            validate: {
+                validator: function() {
+                    // Define your validation logic here
+                    if (this.category.categoryType === 'personal') {
+                        return ['electricity', 'civil', 'cleaning', 'other'].includes(this.category.subCategoryType);
+                    } else if (this.category.categoryType === 'common') {
+                        return ['water', 'bathroom', 'light', 'other'].includes(this.category.subCategoryType);
+                    } else {
+                        return false;
+                    }
+                },
+                
             }
+            
         }
+    },
+    currentStatus : {
+        type : String,
+        enum: ['pending', 'ongoing', 'solved'],
+        required: true,
     },
     title : {
         type : String,
