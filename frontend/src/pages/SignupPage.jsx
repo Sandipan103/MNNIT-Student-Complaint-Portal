@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 
 import CircularProgress from "@mui/material/CircularProgress";
@@ -10,8 +10,11 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import { Link} from "react-router-dom";
+import { Context } from "../index.js";
 
 const SignupPage = () => {
+  const {isAuthenticated,setIsAuthenticated} = useContext(Context);
   const [signupData, setSignupData] = useState({
     firstName: "",
     lastName: "",
@@ -73,7 +76,6 @@ const SignupPage = () => {
       setLoading(false); 
     }
   };
-
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={12} sm={8} md={6} lg={4}>
@@ -175,6 +177,23 @@ const SignupPage = () => {
               </Button>
             </form>
           )}
+           {!isAuthenticated && (
+            <h4 style={{ margin: "20px", fontSize: "16px", color: "black" }}>
+              Already Signed Up ? Login here
+            </h4>
+          )}
+
+          {/* Login button */}
+          <Button
+            variant="outlined"
+            color="primary"
+            fullWidth
+            style={{ marginTop: "10px" }}
+            component={Link} 
+            to="/login"
+          >
+            Log in here
+          </Button>
         </Paper>
       </Grid>
     </Grid>

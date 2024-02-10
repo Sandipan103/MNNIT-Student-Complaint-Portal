@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -14,6 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { Context, server } from "../index.js";
 
 const ComplaintForm = () => {
   const navigate = useNavigate();
@@ -22,7 +23,8 @@ const ComplaintForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [additionalDetails, setAdditionalDetails] = useState("");
-
+  const { isAuthenticated } = useContext(Context);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = Cookies.get("tokenf");
@@ -34,11 +36,12 @@ const ComplaintForm = () => {
       const userId = decodedToken.id;
       
       const response = await axios.post(
-        `http://localhost:4000/api/v1/createPersonalComplaint`,
+        `${server}/createPersonalComplaint`,
         {
           userId : userId,
           categoryType : categoryType,
           subCategoryType : subCategoryType,
+          currentStatus:"pending",
           title : title,
           description : description,
           additionalDetails : additionalDetails,
@@ -56,6 +59,8 @@ const ComplaintForm = () => {
       console.error("Error creating complaint:", error);
     }
   };
+
+  if (!isAuthenticated) return <Navigate to={"/login"} />;
 
   return (
     <Container maxWidth="sm">

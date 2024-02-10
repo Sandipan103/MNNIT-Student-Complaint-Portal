@@ -17,6 +17,7 @@ exports.createPersonalComplaint = async (req, res) => {
       categoryType,
       subCategoryType,
       title,
+      currentStatus,
       description,
       image,
     } = req.body;
