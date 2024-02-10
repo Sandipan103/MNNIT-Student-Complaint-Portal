@@ -24,7 +24,7 @@ const Navbar = () => {
       navigate("/login");
     } catch (error) {
       console.log(error);
-     toast.error("Problem while Logging out");
+      toast.error("Problem while Logging out");
       setIsAuthenticated(true);
       setLoading(false);
     }

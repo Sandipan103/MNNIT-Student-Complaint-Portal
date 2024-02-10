@@ -10,10 +10,12 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Link} from "react-router-dom";
-import { Context } from "../index.js";
+import toast from "react-hot-toast";
+import { Link, useNavigate} from "react-router-dom";
+import { Context, server } from "../index.js";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
   const {isAuthenticated,setIsAuthenticated} = useContext(Context);
   const [signupData, setSignupData] = useState({
     firstName: "",
@@ -44,16 +46,26 @@ const SignupPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // email validation
+    const emailPattern = /^[a-zA-Z0-9._-]+@mnnit.ac.in$/;
+    if (!emailPattern.test(signupData.email)) {
+      toast.error("Please use a valid mnnit.ac.in email address.");
+      return;
+    }
+    // password validation
+
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:4000/api/v1/sendOtp",
+        `${server}/sendOtp`,
         { email: signupData.email },
         { withCredentials: true }
       );
+      toast.success(`Otp successfully send to your mail 📫`);
       console.log(response.data);
       setProgress(true);
     } catch (error) {
+      toast.error(`Otp can't be send 📪`);
       console.error("Error sending OTP:", error);
     } finally {
       setLoading(false);
@@ -65,17 +77,20 @@ const SignupPage = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:4000/api/v1/signup",
+        `${server}/signup`,
         { ...signupData, otp },
         { withCredentials: true }
       );
       console.log(response.data);
+      toast.success(``)
     } catch (error) {
+      toast.error(`invalid Otp ⛔ `);
       console.error("Error verifying OTP:", error);
     } finally {
       setLoading(false); 
     }
   };
+
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={12} sm={8} md={6} lg={4}>
@@ -159,12 +174,16 @@ const SignupPage = () => {
               <TextField
                 label="Enter OTP"
                 variant="outlined"
-                type="text"
+                type="number"
                 name="otp"
                 value={otp}
                 onChange={handleOtpChange}
                 fullWidth
                 margin="normal"
+                inputProps={{
+                  inputMode: 'numeric',
+                  pattern: '[0-9]{6}'
+                }}
               />
               <Button
                 type="submit"

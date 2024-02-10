@@ -13,8 +13,11 @@ import {
   Select,
   TextField,
   Typography,
+  Paper,
+  Box,
 } from "@mui/material";
 import { Context, server } from "../index.js";
+import toast from "react-hot-toast";
 
 const ComplaintForm = () => {
   const navigate = useNavigate();
@@ -47,8 +50,9 @@ const ComplaintForm = () => {
           additionalDetails : additionalDetails,
         }
       )
-
-      console.log(response.data);
+       
+      toast.success('complaint raised successfully');
+      // console.log("response.data : ", response.data);
 
       setCategoryType("");
       setSubCategoryType("");
@@ -56,6 +60,8 @@ const ComplaintForm = () => {
       setDescription("");
       setAdditionalDetails("");
     } catch (error) {
+      toast.error('something is wrong');
+      toast.error('you have to update  your profile');
       console.error("Error creating complaint:", error);
     }
   };
@@ -64,6 +70,7 @@ const ComplaintForm = () => {
 
   return (
     <Container maxWidth="sm">
+      <Paper elevation={3} style={{ padding: "20px", width: "80%", margin: "0 auto" }}>
       <Typography variant="h5" component="h2" gutterBottom style={{ textAlign: 'center' }}>
         Complaint Form
       </Typography>
@@ -138,10 +145,13 @@ const ComplaintForm = () => {
           value={additionalDetails}
           onChange={(e) => setAdditionalDetails(e.target.value)}
         />
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Button variant="contained" color="primary" type="submit">
           Submit
         </Button>
+        </Box>
       </form>
+      </Paper>
     </Container>
   );
 };
