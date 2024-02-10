@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Button, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Context, server } from "../index";
+import { Context, server } from "../index.js";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -17,7 +17,6 @@ const Navbar = () => {
         withCredentials: true,
       });
       Cookies.remove("tokenf");
-    
       toast.success("Logged Out !!!!");
       setIsAuthenticated(false);
       setLoading(false);
@@ -30,7 +29,6 @@ const Navbar = () => {
       setLoading(false);
     }
   };
-
   return (
     <AppBar position="static">
       <Toolbar>
@@ -52,7 +50,6 @@ const Navbar = () => {
         </IconButton>
         {/* <Button color="inherit" component={Link} to="/">Home</Button> */}
         <Button color="inherit" component={Link} to="/complaintForm">
-          {" "}
           Complaint
         </Button>
         <Button color="inherit" component={Link} to="/dashboard">

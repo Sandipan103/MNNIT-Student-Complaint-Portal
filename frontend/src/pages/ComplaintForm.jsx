@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Context, server } from "../index";
+import { Context, server } from "../index.js";
 
 const ComplaintForm = () => {
   const navigate = useNavigate();
@@ -41,6 +41,7 @@ const ComplaintForm = () => {
           userId : userId,
           categoryType : categoryType,
           subCategoryType : subCategoryType,
+          currentStatus:"pending",
           title : title,
           description : description,
           additionalDetails : additionalDetails,

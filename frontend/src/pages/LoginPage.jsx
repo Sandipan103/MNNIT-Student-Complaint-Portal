@@ -12,11 +12,10 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Context, server } from "../index";
+import { Context, server } from "../index.js";
 
 const LoginPage = () => {
   const {isAuthenticated,setIsAuthenticated} = useContext(Context);
-  const navigate = useNavigate();
   const [userDetail, setUserDetail] = useState({
     email: "",
     password: "",
@@ -45,6 +44,7 @@ const LoginPage = () => {
         { withCredentials: true }
       );
       setIsAuthenticated(true);
+      console.log(isAuthenticated);
       // console.log("token : ", response.data.token);
       // console.log("user : ", response.data.user);
       Cookies.set("tokenf", response.data.token, {
@@ -59,7 +59,7 @@ const LoginPage = () => {
     }
   };
 
-  if (isAuthenticated) return <Navigate to={"/"} />;
+  if (isAuthenticated) return <Navigate to={"/complaintForm"} />;
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={12} sm={8} md={6} lg={4}>

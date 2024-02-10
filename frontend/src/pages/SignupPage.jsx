@@ -10,8 +10,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Link, Navigate } from "react-router-dom";
-import { Context } from "..";
+import { Link} from "react-router-dom";
+import { Context } from "../index.js";
 
 const SignupPage = () => {
   const {isAuthenticated,setIsAuthenticated} = useContext(Context);
@@ -190,7 +190,7 @@ const SignupPage = () => {
             fullWidth
             style={{ marginTop: "10px" }}
             component={Link} 
-            to="/profile"
+            to="/login"
           >
             Log in here
           </Button>
