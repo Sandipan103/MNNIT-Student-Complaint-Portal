@@ -13,9 +13,12 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Paper,
+  Box,
 } from "@mui/material";
 import { Context, server } from "../index";
 import { useContext } from "react";
+import toast from "react-hot-toast";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -69,6 +72,7 @@ const Profile = () => {
           hostelName: defaultHostelName,
         });
       } catch (error) {
+        toast.error('profile data not fetched');
         console.error("Error decoding token:", error);
       } finally {
         setLoading(false);
@@ -82,6 +86,10 @@ const Profile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "contactNo" && !/^\d{0,10}$/.test(value))  {
+      toast.error('invalid contact number');
+      return;
+    }
     setEditedData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -104,7 +112,9 @@ const Profile = () => {
           regNo: editedData.regNo,
           hostelName: editedData.hostelName,
         });
+        toast.success('profile updated');
       } catch (error) {
+        toast.error('profile not updated');
         console.error("Error updating profile:", error);
       } finally {
         setLoading(false);
@@ -113,16 +123,29 @@ const Profile = () => {
   };
   if (!isAuthenticated) return <Navigate to={"/login"} />;
   return (
-    <div style={{ backgroundColor: "beige", color: "white", padding: "20px" }}>
-      <h1 style={{ textAlign: "center", color: "black" }}>Profile Page</h1>
+    <div style={{  padding: "20px" }}>
+      <Paper
+        style={{
+          width: "80%",
+          margin: "0 auto",
+          boxShadow: "0px 3px 6px #00000029",
+          padding: "20px",
+          // backgroundColor: "beige",
+        }}
+      >
       {loading && <CircularProgress />}
       
       {userData && (
         <div>
-          <Grid container spacing={2} justifyContent="center">
-            <Grid item>
-              <Avatar alt="Profile Picture" src={userData.image} />
-            </Grid>
+          <Grid container spacing={2} justifyContent="flex-start">
+              <Grid item xs={12} md={3} justifyContent={"flex-start"}>
+                <Avatar
+                  alt="Profile Picture"
+                  src={userData.image}
+                  sx={{ width: 100, height: 100 }}
+                />
+              </Grid>
+              <br/>
             <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
@@ -150,20 +173,27 @@ const Profile = () => {
                 label="Email"
                 value={userData.email || ""}
                 onChange={handleChange}
+                disabled
                 style={{ backgroundColor: "white", color: "black" }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                name="gender"
-                label="Gender"
-                value={editedData.gender || ""}
-                onChange={handleChange}
-                style={{ backgroundColor: "white", color: "black" }}
-              />
+              <FormControl fullWidth>
+                <InputLabel id="gender-label">Gender</InputLabel>
+                <Select
+                  labelId="gender-label"
+                  id="gender"
+                  name="gender"
+                  value={editedData.gender || ""}
+                  onChange={handleChange}
+                  style={{ backgroundColor: "white", color: "black" }}
+                >
+                  <MenuItem value="male">Male</MenuItem>
+                  <MenuItem value="female">Female</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12}  sm={6}>
               <TextField
                 fullWidth
                 name="dateOfBirth"
@@ -173,7 +203,7 @@ const Profile = () => {
                 style={{ backgroundColor: "white", color: "black" }}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12}  sm={6}>
               <TextField
                 fullWidth
                 name="contactNo"
@@ -183,7 +213,7 @@ const Profile = () => {
                 style={{ backgroundColor: "white", color: "black" }}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12}  sm={6}>
               <TextField
                 fullWidth
                 name="regNo"
@@ -193,7 +223,7 @@ const Profile = () => {
                 style={{ backgroundColor: "white", color: "black" }}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12}  sm={6}>
               <FormControl fullWidth>
                 <InputLabel id="hostelName-label" style={{ color: "white" }}>
                   Hostel
@@ -215,6 +245,7 @@ const Profile = () => {
               </FormControl>
             </Grid>
           </Grid>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Button
             variant="contained"
             onClick={handleSubmit}
@@ -222,8 +253,10 @@ const Profile = () => {
           >
             Save
           </Button>
+          </Box>
         </div>
       )}
+      </Paper>
     </div>
   );
 };

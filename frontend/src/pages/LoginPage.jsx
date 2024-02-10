@@ -13,6 +13,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Context, server } from "../index.js";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const {isAuthenticated,setIsAuthenticated} = useContext(Context);
@@ -52,6 +53,7 @@ const LoginPage = () => {
       });
       console.log(isAuthenticated);
       // navigate(`/profile`);
+      toast.success(`logged in`)
     } catch (error) {
       console.error("lgoin error", error);
     } finally {
@@ -59,7 +61,7 @@ const LoginPage = () => {
     }
   };
 
-  if (isAuthenticated) return <Navigate to={"/complaintForm"} />;
+  if (isAuthenticated) return <Navigate to={"/profile"} />;
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={12} sm={8} md={6} lg={4}>
