@@ -9,7 +9,7 @@ const Warden = require("../models/WardenModel")
 require("dotenv").config();
 
 
-// send otp
+// create personal complaint
 exports.createPersonalComplaint = async (req, res) => {
   try {
     // step-1 : fetch data from complaint form
@@ -93,3 +93,44 @@ exports.createPersonalComplaint = async (req, res) => {
     });
   }
 };
+
+
+
+exports.getMyComplaints = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const user = await User.findById(userId).select("-password").populate({
+      path: 'pendingComplaints ongoingComplaints solvedComplaints',
+      populate: {
+        path: 'createdBy receivedBy warden',
+        select: '-password',
+      },
+    });
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found" 
+      });
+    }
+    const { pendingComplaints, ongoingComplaints, solvedComplaints } = user;
+    const complaints = {
+      pending: pendingComplaints,
+      ongoing: ongoingComplaints,
+      solved: solvedComplaints,
+    };
+    res.json({ 
+      success: true, 
+      complaints 
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Something went wrong while fetching my complaints" 
+    });
+  }
+};
+
+
+
+
