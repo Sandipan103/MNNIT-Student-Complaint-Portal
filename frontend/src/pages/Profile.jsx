@@ -40,31 +40,38 @@ const Profile = () => {
     const token = Cookies.get("tokenf");
     if (token) {
       try {
-        setLoading(true); // Set loading to true before making the API call
+        setLoading(true);
         const decodedToken = jwtDecode(token);
         const { id: userId } = decodedToken;
-
+  
         const response = await axios.get(
           `${server}/getUserProfileById/${userId}`
         );
-        // console.log('decodedToken : ', decodedToken);
-        console.log("userData : ", response.data.user);
-        setUserData(response.data.user);
-        // Set initial state for editedData from userData
+  
+        const user = response.data.user;
+        console.log("userData : ", user);
+        setUserData(user);
+  
+        const defaultGender = user.gender || ""; 
+        const defaultDateOfBirth = user.dateOfBirth || "";
+        const defaultContactNo = user.contactNo || ""; 
+        const defaultRegNo = user.regNo || ""; 
+        const defaultHostelName = user.hostel ? user.hostel.name : ""; 
+  
         setEditedData({
-          firstName: response.data.user.firstName || "",
-          lastName: response.data.user.lastName || "",
-          email: response.data.user.email || "",
-          gender: response.data.user.gender || "",
-          dateOfBirth: response.data.user.dateOfBirth || "",
-          contactNo: response.data.user.contactNo || "",
-          regNo: response.data.user.regNo || "",
-          hostelName: response.data.user.hostel.name,
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+          email: user.email || "",
+          gender: defaultGender,
+          dateOfBirth: defaultDateOfBirth,
+          contactNo: defaultContactNo,
+          regNo: defaultRegNo,
+          hostelName: defaultHostelName,
         });
       } catch (error) {
         console.error("Error decoding token:", error);
       } finally {
-        setLoading(false); // Set loading back to false after the API call completes
+        setLoading(false);
       }
     }
   };
@@ -86,7 +93,7 @@ const Profile = () => {
     console.log("editedData : ", editedData);
     if (token) {
       try {
-        setLoading(true); // Set loading to true before making the API call
+        setLoading(true); 
         const response = await axios.put(`${server}/updateUserProfileById`, {
           userId: userData._id,
           firstName: editedData.firstName,
@@ -100,7 +107,7 @@ const Profile = () => {
       } catch (error) {
         console.error("Error updating profile:", error);
       } finally {
-        setLoading(false); // Set loading back to false after the API call completes
+        setLoading(false);
       }
     }
   };
@@ -108,8 +115,8 @@ const Profile = () => {
   return (
     <div style={{ backgroundColor: "beige", color: "white", padding: "20px" }}>
       <h1 style={{ textAlign: "center", color: "black" }}>Profile Page</h1>
-      {loading && <CircularProgress />}{" "}
-      {/* Render CircularProgress if loading */}
+      {loading && <CircularProgress />}
+      
       {userData && (
         <div>
           <Grid container spacing={2} justifyContent="center">
