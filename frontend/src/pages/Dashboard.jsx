@@ -6,6 +6,9 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { jwtDecode } from "jwt-decode";
 import { Tabs, Tab, Typography } from "@mui/material";
+import PendingProblems from "../component/PendingProblems.jsx";
+import OngoingProblems from "../component/OngoingProblems.jsx";
+import SolvedProblems from "../component/SolvedProblems.jsx";
 
 const Dashboard = () => {
   const { isAuthenticated } = useContext(Context);
@@ -54,103 +57,17 @@ const Dashboard = () => {
         <Tab label="Solved" value="solved" />
       </Tabs>
 
-      {currentTab === "pending" && (
-        <>
-          <h2>Pending Complaints</h2>
-          {complaints.pending.map((complaint) => (
-            <div
-              key={complaint._id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "10px",
-                marginBottom: "10px",
-              }}
-            >
-              <h3>{complaint.title}</h3>
-              <p>Category: {complaint.category.categoryType}</p>
-              <p>Subcategory: {complaint.category.subCategoryType}</p>
-              <p>description: {complaint.description}</p>
-              <p>Status: {complaint.currentStatus}</p>
-              <p>
-                Time of Complaint:{" "}
-                {new Date(complaint.createdAt).toLocaleString()}
-              </p>
-              {complaint.image && (
-                <img
-                  src={complaint.image}
-                  alt="Complaint Image"
-                  style={{ maxWidth: "200px" }}
-                />
-              )}
-            </div>
-          ))}
-        </>
-      )}
-
-      {currentTab === "ongoing" && (
-        <>
-          <h2>Ongoing Complaints</h2>
-          {complaints.ongoing.map((complaint) => (
-            <div
-              key={complaint._id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "10px",
-                marginBottom: "10px",
-              }}
-            >
-              <h3>{complaint.title}</h3>
-              <p>Category: {complaint.category.categoryType}</p>
-              <p>Subcategory: {complaint.category.subCategoryType}</p>
-              <p>description: {complaint.description}</p>
-              <p>Status: {complaint.currentStatus}</p>
-              <p>
-                Time of Complaint:{" "}
-                {new Date(complaint.createdAt).toLocaleString()}
-              </p>
-              {complaint.image && (
-                <img
-                  src={complaint.image}
-                  alt="Complaint Image"
-                  style={{ maxWidth: "200px" }}
-                />
-              )}
-            </div>
-          ))}
-        </>
-      )}
-      {currentTab === "solved" && (
-        <>
-          <h2>Solved Complaints</h2>
-          {complaints.solved.map((complaint) => (
-            <div
-              key={complaint._id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "10px",
-                marginBottom: "10px",
-              }}
-            >
-              <h3>{complaint.title}</h3>
-              <p>Category: {complaint.category.categoryType}</p>
-              <p>Subcategory: {complaint.category.subCategoryType}</p>
-              <p>description: {complaint.description}</p>
-              <p>Status: {complaint.currentStatus}</p>
-              <p>
-                Time of Complaint:{" "}
-                {new Date(complaint.createdAt).toLocaleString()}
-              </p>
-              {complaint.image && (
-                <img
-                  src={complaint.image}
-                  alt="Complaint Image"
-                  style={{ maxWidth: "200px" }}
-                />
-              )}
-            </div>
-          ))}
-        </>
-      )}
+      <div style={{ width: "90%", margin: "0 auto" }}>
+        {currentTab === "pending" && (
+          <PendingProblems complaints={complaints.pending} />
+        )}
+        {currentTab === "ongoing" && (
+          <OngoingProblems complaints={complaints.ongoing} />
+        )}
+        {currentTab === "solved" && (
+          <SolvedProblems complaints={complaints.solved} />
+        )}
+      </div>
     </div>
   );
 };
