@@ -1,0 +1,32 @@
+.pending-complaint-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f5f5f5;
+    box-shadow: 0px 3px 6px #00000029;
+    transition: transform 0.3s;
+    cursor: pointer;
+    position: relative; /* Added position relative */
+  }
+  
+  .pending-complaint-container p {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .pending-complaint-container:hover {
+    transform: scale(1.03);
+  }
+  
+  .complaint-details {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .mark-as-solved-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
