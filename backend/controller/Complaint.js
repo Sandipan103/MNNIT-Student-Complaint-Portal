@@ -59,6 +59,7 @@ exports.createPersonalComplaint = async (req, res) => {
       createdBy: userId,
       receivedBy: hostel.careTaker,
       warden: hostel.warden,
+      hostel : hostelId,
       createdAt: new Date(),
       image: null,
     });
@@ -133,4 +134,45 @@ exports.getMyComplaints = async (req, res) => {
 
 
 
+
+exports.getCommonComplaint = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: `User not found`,
+      });
+    }
+
+    // console.log("user :: ", user);
+
+    const hostelId = user.hostel;
+
+    const hostel = await Hostel.findById(hostelId);
+
+    if (!hostel) {
+      return res.status(404).json({
+        success: false,
+        message: `Hostel not found`,
+      });
+    }
+
+    const complaints = await Complaint.find({ hostel: hostelId });
+
+    res.status(200).json({
+      success: true,
+      complaints,
+    });
+  } catch (error) {
+    console.log("error occured while fetching all common complaint : ", error);
+    return res.status(401).json({
+      success: false,
+      message: `common complaint not found`,
+    });
+  }
+};
 

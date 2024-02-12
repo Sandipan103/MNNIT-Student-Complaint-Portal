@@ -30,7 +30,11 @@ const Dashboard = () => {
       const { id: userId } = decodedToken;
       const response = await axios.get(`${server}/getMyComplaints/${userId}`);
       const { pending, ongoing, solved } = response.data.complaints;
-      setComplaints({ pending, ongoing, solved });
+      const personalPending = pending.filter(complaint => complaint.category.categoryType === 'personal');
+      const personalOngoing = ongoing.filter(complaint => complaint.category.categoryType === 'personal');
+      const personalSolved = solved.filter(complaint => complaint.category.categoryType === 'personal');
+
+      setComplaints({ pending: personalPending, ongoing: personalOngoing, solved: personalSolved });
       console.log("response :", response);
       // console.log('response.pending :' , response.data.complaints.pending);
     } catch (error) {
