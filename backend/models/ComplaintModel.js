@@ -60,6 +60,22 @@ const complaintSchema = new mongoose.Schema({
         required: true,
         ref: "Warden",
     },
+    hostel : {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Hostel",
+    },
+    upvotes: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User' 
+    }],
+    comments: [{ 
+        comment: String, 
+        user: { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'User' 
+        } 
+    }],
     createdAt: {
         type: Date,
         default: Date.now
