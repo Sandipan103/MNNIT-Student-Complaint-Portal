@@ -52,6 +52,9 @@ const Navbar = () => {
         <Button color="inherit" component={Link} to="/complaintForm">
           Complaint
         </Button>
+        <Button color="inherit" component={Link} to="/feed">
+          Feed
+        </Button>
         <Button color="inherit" component={Link} to="/dashboard">
           Dashboard
         </Button>

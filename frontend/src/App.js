@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Navbar from "./component/Navbar";
 import { Toaster } from "react-hot-toast";
+import Feed from "./pages/Feed";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/complaintForm" element={<ComplaintForm />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/feed" element={<Feed />} />
         </Routes>
       </Router>
       <Toaster/>
