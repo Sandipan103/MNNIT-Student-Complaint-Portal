@@ -17,6 +17,8 @@ import ChatIcon from "@mui/icons-material/Chat";
 
 const Feed = () => {
   const [commonComplaints, setCommonComplaints] = useState([]);
+  const [userUpvotedComplaints, setUserUpvotedComplaints] = useState([]);
+
 
   useEffect(() => {
     fetchCommonComplaints();
@@ -44,8 +46,33 @@ const Feed = () => {
     }
   };
 
-  const handleUpvote = (complaintId) => {
-    // Implement upvote functionality here
+  const handleUpvote = async (complaintId) => {
+    try {
+      const token = Cookies.get("tokenf");
+      if (!token) {
+        toast.error("Please login first");
+        return;
+      }
+      const decodedToken = jwtDecode(token);
+      const { id: userId } = decodedToken;
+
+      if (userUpvotedComplaints.includes(complaintId)) {
+        // If yes, perform downvote
+        await axios.post(`${server}/downvoteComplaint/${userId}`, {
+          complaintId,
+        });
+      } else {
+        // If no, perform upvote
+        await axios.post(`${server}/upvoteComplaint/${userId}`, {
+          complaintId,
+        });
+      }
+
+      // Fetch common complaints again to reflect the changes
+      fetchCommonComplaints();
+    } catch (error) {
+      console.error("Error upvoting/downvoting complaint:", error);
+    }
   };
 
   const handleComment = (complaintId, comment) => {
@@ -92,13 +119,16 @@ const Feed = () => {
               }}
             >
               <Button
-                variant="outlined"
-                color="primary"
-                startIcon={<FavoriteIcon />}
-                onClick={() => handleUpvote(complaint._id)}
-              >
-                Like
-              </Button>
+              variant="outlined"
+              color="primary"
+              startIcon={<FavoriteIcon />}
+              onClick={() => handleUpvote(complaint._id)}
+            >
+              {userUpvotedComplaints.includes(complaint._id)
+                ? "Downvote"
+                : "Upvote"}
+              ({complaint.upvotes.length})
+            </Button>
               <Button
                 variant="outlined"
                 color="primary"
