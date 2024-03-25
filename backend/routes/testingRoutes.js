@@ -44,7 +44,7 @@ router.get('/getCommonComplaint/:userId', getCommonComplaint);
 
 
 
-// creating hostel, caretaker, warden
+// admin routing :  creating hostel, caretaker, warden
 router.post('/createHostel', createHostel);
 router.post('/createCaretaker', createCaretaker);
 router.post('/createWarden', createWarden);

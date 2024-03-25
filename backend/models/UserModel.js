@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Hostel'
     },
+    roomNo : {
+        type : String,
+    },
     email : {
         type : String,
         required : true,
