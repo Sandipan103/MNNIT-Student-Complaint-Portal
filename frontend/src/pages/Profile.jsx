@@ -24,7 +24,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [editedData, setEditedData] = useState({});
-  const [loading, setLoading] = useState(false); // State variable to indicate backend call loading
+  const [loading, setLoading] = useState(false); 
 
   const { isAuthenticated } = useContext(Context);
   const hostelOptions = [
