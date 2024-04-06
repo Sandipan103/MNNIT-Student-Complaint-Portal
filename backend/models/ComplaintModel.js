@@ -52,12 +52,12 @@ const complaintSchema = new mongoose.Schema({
     },
     receivedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
+        // required: true,
         ref: "Caretaker",
     },
     warden: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
+        // required: true,
         ref: "Warden",
     },
     hostel : {
