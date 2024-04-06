@@ -51,7 +51,10 @@ router.post('/createWarden', createWarden);
 
 
 
+
 // other routing
+// router.get('/caretakerInfo',careTakerInfo);
+// router.get('/WardenInfo',WardenInfo);
 
 
 
