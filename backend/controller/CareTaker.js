@@ -10,7 +10,8 @@ const Caretaker = require("../models/CaretakerModel");
 const Complaint = require("../models/ComplaintModel");
 
 
-//
+// creating new caretaker for hostel
+
 exports.createCaretaker = async (req, res) => {
   try {
     const { name, contactNo, email, password, hostelName } = req.body;
@@ -33,9 +34,8 @@ exports.createCaretaker = async (req, res) => {
       });
     }
 
-    const existingCaretaker = await Caretaker.findOne({ hostel: hostel._id });
-
-    if (existingCaretaker) {
+    // Check if a caretaker is already assigned to this hostel
+    if (hostel.careTaker) { 
       return res.status(401).json({
         success: false,
         message: `A caretaker is already assigned to this hostel.`,
@@ -44,7 +44,7 @@ exports.createCaretaker = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // step-7 : create user
+    // create careTaker
     const caretaker = await Caretaker.create({
         name,
         contactNo,
@@ -53,8 +53,12 @@ exports.createCaretaker = async (req, res) => {
         hostel: hostel._id,
     });
 
-    hostel.careTaker = caretaker._id;
-    await hostel.save();
+    // update the hostel, adding careTaker
+    const updatedHostel = await Hostel.findByIdAndUpdate(
+      hostel._id,
+      { careTaker: caretaker._id },
+      { new: true }
+    );
     
     return res.status(200).json({
       success: true,

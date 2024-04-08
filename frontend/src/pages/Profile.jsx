@@ -111,6 +111,7 @@ const Profile = () => {
           contactNo: editedData.contactNo,
           regNo: editedData.regNo,
           hostelName: editedData.hostelName,
+          roomNo : editedData.roomNo,
         });
         toast.success('profile updated');
       } catch (error) {
@@ -231,7 +232,7 @@ const Profile = () => {
                 <Select
                   labelId="hostelName-label"
                   id="hostelName"
-                  name="hostelName"
+                  name="Hostel Name"
                   value={editedData.hostelName || ""}
                   onChange={handleChange}
                   style={{ backgroundColor: "white", color: "black" }}
@@ -243,6 +244,16 @@ const Profile = () => {
                   ))}
                 </Select>
               </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="roomNo"
+                label="Room No"
+                value={editedData.roomNo || ""}
+                onChange={handleChange}
+                style={{ backgroundColor: "white", color: "black" }}
+              />
             </Grid>
           </Grid>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
