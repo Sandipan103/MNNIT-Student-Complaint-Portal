@@ -143,3 +143,21 @@ exports.loginCareTaker = async(req, res) => {
   }
 };
 
+
+// get all personalcomplaints
+exports.getAllComplaints = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const complaints = await Complaint.find({ receivedBy: userId }).populate('createdBy', '-password');;
+    res.json({ 
+      success: true, 
+      complaints 
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ 
+      success: false, 
+      message: "something went wrong while fetching complaints" 
+    });
+  }
+};
