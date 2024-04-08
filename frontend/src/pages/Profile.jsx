@@ -69,6 +69,7 @@ const Profile = () => {
           dateOfBirth: defaultDateOfBirth,
           contactNo: defaultContactNo,
           regNo: defaultRegNo,
+          roomNo : user.roomNo || "",
           hostelName: defaultHostelName,
         });
       } catch (error) {
@@ -232,7 +233,7 @@ const Profile = () => {
                 <Select
                   labelId="hostelName-label"
                   id="hostelName"
-                  name="Hostel Name"
+                  name="hostelName"
                   value={editedData.hostelName || ""}
                   onChange={handleChange}
                   style={{ backgroundColor: "white", color: "black" }}
