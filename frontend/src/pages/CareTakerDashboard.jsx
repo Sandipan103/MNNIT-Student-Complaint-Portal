@@ -5,23 +5,18 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { Context, server } from "../index";
 import toast from "react-hot-toast";
-import {
-  Typography,
-  Input,
-  Select,
-  MenuItem,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  Button,
-  CircularProgress,
-} from "@mui/material";
+import { Typography, Input, Select, MenuItem, List, ListItem, ListItemText, ListItemSecondaryAction, Button,CircularProgress, Tabs, Tab, } from "@mui/material";
+import CareTakerPendingProblems from '../component/CareTakerPendingProblems';
+import CareTakerOngoingProblems from '../component/CareTakerOngoingProblems';
+import CareTakerSolvedProblems from '../component/CareTakerSolvedProblems';
 
 const CareTakerDashboard = () => {
-  const [complaints, setComplaints] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('');
+  const [complaints, setComplaints] = useState({
+    pending: [],
+    ongoing: [],
+    solved: [],
+  });
+  const [currentTab, setCurrentTab] = useState("pending");
   const [loading, setLoading] = useState(false); 
 
   const navigate = useNavigate();
@@ -33,7 +28,11 @@ const CareTakerDashboard = () => {
         setLoading(true);
         const decodedToken = jwtDecode(token);
         const response = await axios.get(`${server}/getAllComplaints/${decodedToken.id}`);
-        setComplaints(response.data.complaints);
+        const pendingComplaints = response.data.complaints.filter(complaint => complaint.currentStatus === 'pending');
+        const ongoingComplaints = response.data.complaints.filter(complaint => complaint.currentStatus === 'ongoing');
+        const solvedComplaints = response.data.complaints.filter(complaint => complaint.currentStatus === 'solved');
+        setComplaints({pending : pendingComplaints, ongoing : ongoingComplaints, solved : solvedComplaints});
+        console.log(pendingComplaints);
       } catch (error) {
         toast.error('complaint not fetched');
         console.error("Error decoding token:", error);
@@ -47,59 +46,31 @@ const CareTakerDashboard = () => {
     fetchUserDetail();
   }, []);
 
-  const handleSeenClick = async (complaintId) => {
-    try {
-      await axios.put(`/api/complaints/${complaintId}/seen`);
-    } catch (error) {
-      console.error('Error marking complaint as seen:', error);
-    }
-  };
 
-  const filteredComplaints = complaints.filter(complaint => {
-    if (!filterType || filterType === 'all') {
-      return true;
-    }
-    return complaint.category.categoryType === filterType;
-  }).filter(complaint => complaint.title.toLowerCase().includes(searchTerm.toLowerCase()));
+  const handleTabChange = (event, newValue) => {
+    setCurrentTab(newValue);
+  };
 
   return (
     <div>
-      <Input
-        type="text"
-        placeholder="Search..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <Select
-        value={filterType}
-        onChange={(e) => setFilterType(e.target.value)}
-      >
-        <MenuItem value="">All</MenuItem>
-        <MenuItem value="personal">Personal</MenuItem>
-        <MenuItem value="common">Common</MenuItem>
-      </Select>
       {loading && <CircularProgress />}
-      <List>
-        {filteredComplaints.map(complaint => (
-          <ListItem key={complaint._id} sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}>
-            <ListItemText
-              primary={complaint.title}
-              secondary={complaint.description}
-            />
-            <ListItemText
-              primary={`Category: ${complaint.category.categoryType}`}
-              secondary={`Sub-Category: ${complaint.category.subCategoryType}`}
-            />
-            <ListItemText
-              primary={`Created By: ${complaint.createdBy.firstName} ${complaint.createdBy.lastName}`}
-              secondary={`Reg No: ${complaint.createdBy.regNo}, Room No: ${complaint.createdBy.roomNo}`}
-            />
-            <ListItemSecondaryAction>
-              <Button onClick={() => handleSeenClick(complaint._id)}>Seen</Button>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
+      <Tabs value={currentTab} onChange={handleTabChange} centered>
+        <Tab label="Pending" value="pending" />
+        <Tab label="Ongoing" value="ongoing" />
+        <Tab label="Solved" value="solved" />
+      </Tabs>
+
+      <div style={{ width: "90%", margin: "0 auto" }}>
+        {currentTab === "pending" && (
+          <CareTakerPendingProblems complaints = {complaints} setComplaints = {setComplaints} />
+        )}
+        {currentTab === "ongoing" && (
+          <CareTakerOngoingProblems complaints = {complaints} setComplaints = {setComplaints} />
+        )}
+        {currentTab === "solved" && (
+          <CareTakerSolvedProblems complaints = {complaints} setComplaints = {setComplaints} />
+        )}
+      </div>
     </div>
   );
 };

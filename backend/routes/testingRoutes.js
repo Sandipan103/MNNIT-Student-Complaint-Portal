@@ -14,7 +14,7 @@ const {getUserProfileById, updateUserProfileById} = require('../controller/Profi
 
 
 // complaint controller
-const {createPersonalComplaint, getMyComplaints, getCommonComplaint, } = require('../controller/Complaint');
+const {createPersonalComplaint, getMyComplaints, getCommonComplaint, markOngoing} = require('../controller/Complaint');
 
 
 //careTaker controller
@@ -46,6 +46,7 @@ router.put('/updateUserProfileById', updateUserProfileById);
 router.post('/createPersonalComplaint', createPersonalComplaint);
 router.get('/getMyComplaints/:userId', getMyComplaints);
 router.get('/getCommonComplaint/:userId', getCommonComplaint);
+router.post('/markOngoing', markOngoing);
 
 
 
