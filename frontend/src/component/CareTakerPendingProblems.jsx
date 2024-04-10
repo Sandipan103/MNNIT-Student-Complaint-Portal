@@ -3,6 +3,8 @@ import axios from "axios";
 import { Typography, Input, Select, MenuItem, List, ListItem, ListItemText, ListItemSecondaryAction, Button, CircularProgress } from "@mui/material";
 import { Context, server } from "../index.js";
 import toast from "react-hot-toast";
+import * as XLSX from 'xlsx';
+import "../styles/CareTakerDashBoard.css";
 
 const CareTakerPendingProblems = ({ complaints, setComplaints }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -45,6 +47,34 @@ const CareTakerPendingProblems = ({ complaints, setComplaints }) => {
         return titleMatch && categoryTypeMatch && subCategoryTypeMatch;
     });
 
+    const handleDownloadExcel = () => {
+        // console.log(filteredComplaints);
+        const downloadComplaints = filteredComplaints.map(complaint => ({
+            title: complaint.title,
+            description: complaint.description,
+            categoryType: complaint.category.categoryType,
+            subcategoryType: complaint.category.subCategoryType,
+            createdBy: `${complaint.createdBy.firstName} ${complaint.createdBy.lastName}`,
+            roomNo: complaint.createdBy.roomNo,
+            contactNo: complaint.createdBy.contactNo,
+            createdAt: complaint.createdAt,
+            upvoteCount: complaint.upvotes.length,
+            cost : "",
+        }));
+        // console.log(downloadComplaints);
+        // Create a new workbook
+        const wb = XLSX.utils.book_new();
+
+        // Convert data to worksheet
+        const ws = XLSX.utils.json_to_sheet(downloadComplaints);
+
+        // Add the worksheet to the workbook
+        XLSX.utils.book_append_sheet(wb, ws, "Pending Complaints");
+
+        // Generate the Excel file and trigger the download
+        XLSX.writeFile(wb, "pending_complaints.xlsx");
+    }
+
     return (
         <div>
             <Typography variant="h6">CareTaker Pending Problems</Typography>
@@ -75,9 +105,10 @@ const CareTakerPendingProblems = ({ complaints, setComplaints }) => {
                 <MenuItem value="light">Light</MenuItem>
                 <MenuItem value="other">Other</MenuItem>
             </Select>
+            <Button onClick={handleDownloadExcel}>Download Excel</Button>
             <List>
                 {filteredComplaints.map(complaint => (
-                    <ListItem key={complaint._id} sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}>
+                    <ListItem key={complaint._id} className="list-item-container">
                         <ListItemText
                             primary={complaint.title}
                             secondary={complaint.description}
