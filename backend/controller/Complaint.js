@@ -220,3 +220,48 @@ exports.markOngoing = async (req, res) => {
     });
   }
 };
+
+
+exports.markSolved = async (req, res) => {
+  try {
+    const { complaintId, } = req.body;
+
+    const complaint = await Complaint.findByIdAndUpdate(
+      complaintId,
+      { currentStatus: 'solved' },
+      { new: true }
+    );
+
+    if (!complaint) {
+      return res.status(404).json({
+        success: false,
+        message: `complaint not found`,
+      });
+    }
+
+    const user = await User.findById(complaint.createdBy);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: `User not found for the complaint`,
+      });
+    }
+
+    user.ongoingComplaints.pull(complaintId);
+    user.solvedComplaints.push(complaintId);
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: `complaint marked as solved successfully`,
+      complaint,
+    });
+  } catch (error) {
+    console.log("error occured while marking complaint as solved : ", error);
+    return res.status(401).json({
+      success: false,
+      message: `complaint not marked as solved`,
+    });
+  }
+};

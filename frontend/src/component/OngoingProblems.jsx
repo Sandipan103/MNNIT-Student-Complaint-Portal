@@ -10,10 +10,22 @@ const OngoingProblems = ({ complaints, setComplaints }) => {
 
   const markAsSolved = async (complaintId) => {
     try {
-      const response = await axios.post(
+        const response = await axios.post(
           `${server}/markSolved`,
           { complaintId : complaintId, }
         )
+
+        const index = complaints.findIndex(complaint => complaint._id === complaintId);
+
+        // Remove the complaint from the ongoing complaints array
+        const updatedOngoingComplaints = [...complaints.slice(0, index), ...complaints.slice(index + 1)];
+  
+        // Update the state to reflect the changes
+        setComplaints(prevState => ({
+          ...prevState,
+          ongoing: updatedOngoingComplaints,
+          solved: [...prevState.solved, complaints[index]]
+        }));
       
       toast.success('complaints marked as solved');
     } catch (error) {
