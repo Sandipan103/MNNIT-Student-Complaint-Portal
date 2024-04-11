@@ -1,0 +1,13 @@
+.list-item-container {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    transition: transform 0.3s;
+    cursor: pointer;
+  }
+  
+  .list-item-container:hover {
+    transform: scale(1.03);
+  }
+  

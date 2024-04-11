@@ -30,25 +30,25 @@ exports.getUserProfileById = async (req, res) => {
 };
 
 exports.updateUserProfileById = async (req, res, next) => {
-  const {
-    userId,
-    firstName,
-    lastName,
-    gender,
-    dateOfBirth,
-    contactNo,
-    regNo,
-    hostelName,
-  } = req.body;
+  const { userId, firstName, lastName, gender, dateOfBirth, contactNo, regNo, hostelName, roomNo, } = req.body;
 
   const hostel = await Hostel.findOne({name : hostelName});
 
-    if (!hostel) {
-      return res.status(404).json({
-        success: false,
-        message: `Hostel not found`,
-      });
-    }
+  if (!hostel) {
+    return res.status(404).json({
+      success: false,
+      message: `Hostel not found`,
+    });
+  }
+
+  // Check if the room number is available in any wing of the hostel
+  const roomExists = hostel.wings.some(wing => wing.roomNo.includes(roomNo));
+  if (!roomExists) {
+    return res.status(404).json({
+      success: false,
+      message: `Room ${roomNo} not found in hostel ${hostelName}`,
+    });
+  }
 
   const updatedData = {
     firstName,
@@ -58,6 +58,7 @@ exports.updateUserProfileById = async (req, res, next) => {
     contactNo,
     regNo,
     hostel : hostel._id,
+    roomNo,
   };
 
   

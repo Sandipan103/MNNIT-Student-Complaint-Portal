@@ -35,7 +35,7 @@ const Dashboard = () => {
       const personalSolved = solved.filter(complaint => complaint.category.categoryType === 'personal');
 
       setComplaints({ pending: personalPending, ongoing: personalOngoing, solved: personalSolved });
-      console.log("response :", response);
+      console.log("response :", response.data.complaints);
       // console.log('response.pending :' , response.data.complaints.pending);
     } catch (error) {
       console.error("Error fetching complaints:", error);
@@ -66,7 +66,7 @@ const Dashboard = () => {
           <PendingProblems complaints={complaints.pending} />
         )}
         {currentTab === "ongoing" && (
-          <OngoingProblems complaints={complaints.ongoing} />
+          <OngoingProblems complaints={complaints.ongoing} setComplaints={setComplaints}/>
         )}
         {currentTab === "solved" && (
           <SolvedProblems complaints={complaints.solved} />
