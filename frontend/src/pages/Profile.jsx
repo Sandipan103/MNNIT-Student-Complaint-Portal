@@ -24,7 +24,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [editedData, setEditedData] = useState({});
-  const [loading, setLoading] = useState(false); // State variable to indicate backend call loading
+  const [loading, setLoading] = useState(false); 
 
   const { isAuthenticated } = useContext(Context);
   const hostelOptions = [
@@ -69,6 +69,7 @@ const Profile = () => {
           dateOfBirth: defaultDateOfBirth,
           contactNo: defaultContactNo,
           regNo: defaultRegNo,
+          roomNo : user.roomNo || "",
           hostelName: defaultHostelName,
         });
       } catch (error) {
@@ -111,6 +112,7 @@ const Profile = () => {
           contactNo: editedData.contactNo,
           regNo: editedData.regNo,
           hostelName: editedData.hostelName,
+          roomNo : editedData.roomNo,
         });
         toast.success('profile updated');
       } catch (error) {
@@ -243,6 +245,16 @@ const Profile = () => {
                   ))}
                 </Select>
               </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="roomNo"
+                label="Room No"
+                value={editedData.roomNo || ""}
+                onChange={handleChange}
+                style={{ backgroundColor: "white", color: "black" }}
+              />
             </Grid>
           </Grid>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>

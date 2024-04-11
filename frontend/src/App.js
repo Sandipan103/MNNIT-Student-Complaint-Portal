@@ -9,6 +9,8 @@ import Profile from "./pages/Profile";
 import Navbar from "./component/Navbar";
 import { Toaster } from "react-hot-toast";
 import Feed from "./pages/Feed";
+import LoginCareTaker from "./pages/LoginCareTaker";
+import CareTakerDashboard from "./pages/CareTakerDashboard";
 
 function App() {
   return (
@@ -23,6 +25,10 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/feed" element={<Feed />} />
+
+          <Route path="/loginCareTaker" element={<LoginCareTaker />} />
+          <Route path="/careTakerDashBoard" element={<CareTakerDashboard />} />
+
         </Routes>
       </Router>
       <Toaster/>

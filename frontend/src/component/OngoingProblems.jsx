@@ -1,12 +1,37 @@
 import React from "react";
 import { IconButton } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import axios from "axios";
+import { Context, server } from "../index.js";
+import toast from "react-hot-toast";
 import "../styles/Dashboard.css";
 
-const OngoingProblems = ({ complaints }) => {
+const OngoingProblems = ({ complaints, setComplaints }) => {
+
   const markAsSolved = async (complaintId) => {
-    // Your logic to mark the complaint as solved
-    console.log(`Marking complaint with ID ${complaintId} as solved...`);
+    try {
+        const response = await axios.post(
+          `${server}/markSolved`,
+          { complaintId : complaintId, }
+        )
+
+        const index = complaints.findIndex(complaint => complaint._id === complaintId);
+
+        // Remove the complaint from the ongoing complaints array
+        const updatedOngoingComplaints = [...complaints.slice(0, index), ...complaints.slice(index + 1)];
+  
+        // Update the state to reflect the changes
+        setComplaints(prevState => ({
+          ...prevState,
+          ongoing: updatedOngoingComplaints,
+          solved: [...prevState.solved, complaints[index]]
+        }));
+      
+      toast.success('complaints marked as solved');
+    } catch (error) {
+      toast.error('something went wrong');
+      console.error('Error moving ongoing complaint to solved:', error);
+    }
   };
 
   return (
