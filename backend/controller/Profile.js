@@ -3,6 +3,10 @@
 // model required
 const User = require("../models/UserModel");
 const Hostel = require("../models/HostelModel");
+const Warden = require("../models/WardenModel");
+const Caretaker = require("../models/CaretakerModel");
+
+
 
 // dependency required
 
@@ -84,7 +88,7 @@ exports.updateUserProfileById = async (req, res, next) => {
     console.error(error);
     res.status(500).json({ 
       success: false, 
-      message: "something went wrong whileupdating user profile detail"
+      message: "something went wrong while updating user profile detail"
     });
   }
 };
