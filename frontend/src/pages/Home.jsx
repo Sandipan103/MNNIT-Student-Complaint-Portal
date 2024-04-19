@@ -27,7 +27,7 @@ const Home = () => {
 
   return (
     <div>
-      <header style={{ backgroundColor: '#1976d2', color: '#fff', padding: '5px 0', textAlign: 'center' }}>
+      <header style={{ backgroundColor: '#0f1924', color: '#fff', padding: '5px 0', textAlign: 'center' }}>
         <h1>Welcome to Complaint Portal</h1>
       </header>
       <div className="banner" style={bannerStyle}>
@@ -45,7 +45,6 @@ const Home = () => {
           <ul>
             <li>Email: complaints@example.com</li>
             <li>Phone: 123-456-7890</li>
-            <li>Address: 123 Complaint St, City, Country</li>
           </ul>
         </section>
       </div>

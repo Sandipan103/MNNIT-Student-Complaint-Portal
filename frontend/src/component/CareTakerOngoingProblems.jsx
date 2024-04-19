@@ -5,7 +5,7 @@ const CareTakerOngoingProblems = ({complaints, setComplaints}) => {
 
   return (
     <div>
-        <h2> CareTakerOngoingProblems </h2>
+        <h2>Ongoing Problems </h2>
         <List>
         {complaints.ongoing.map(complaint => (
           <ListItem key={complaint._id} sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}>
