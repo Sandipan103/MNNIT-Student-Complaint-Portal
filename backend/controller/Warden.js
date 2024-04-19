@@ -59,18 +59,17 @@ exports.createWarden= async (req, res) => {
       });
     }
 
-    const existingCaretaker = await Warden.findOne({ hostel: hostel._id });
-
-    if (existingCaretaker) {
+    // Check if a warden is already assigned to this hostel
+    if (hostel.warden) { 
       return res.status(401).json({
         success: false,
-        message: `A Warden is already assigned to this hostel.`,
+        message: `A warden is already assigned to this hostel.`,
       });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // step-7 : create user
+    //  create warden
     const warden = await Warden.create({
         name,
         contactNo,
@@ -79,8 +78,12 @@ exports.createWarden= async (req, res) => {
         hostel: hostel._id,
     });
 
-    hostel.warden = warden._id;
-    await hostel.save();
+    // update the hostel, adding warden
+    const updatedHostel = await Hostel.findByIdAndUpdate(
+      hostel._id,
+      { warden : warden._id },
+      { new: true }
+    );
 
     return res.status(200).json({
       success: true,

@@ -16,6 +16,10 @@ const hostelSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Warden",
     },
+    wings: [{
+        wingNo: { type: String },
+        roomNo : [{ type: String, }]
+    }]
 });
 
 module.exports = mongoose.model('Hostel', hostelSchema);

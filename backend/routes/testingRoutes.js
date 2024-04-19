@@ -14,9 +14,14 @@ const {getUserProfileById, updateUserProfileById} = require('../controller/Profi
 
 
 // complaint controller
-const {createPersonalComplaint, getMyComplaints, getCommonComplaint, } = require('../controller/Complaint');
+const {createPersonalComplaint, getMyComplaints, getCommonComplaint, markOngoing, markSolved} = require('../controller/Complaint');
 
-// 
+
+//careTaker controller
+const {loginCareTaker, getAllComplaints} = require("../controller/CareTaker");
+
+
+// admin controller
 const {createHostel, } = require('../controller/Hostel');
 const { createCaretaker } = require("../controller/CareTaker");
 const  {createWarden,warden } = require("../controller/Warden");
@@ -41,10 +46,18 @@ router.put('/updateUserProfileById', updateUserProfileById);
 router.post('/createPersonalComplaint', createPersonalComplaint);
 router.get('/getMyComplaints/:userId', getMyComplaints);
 router.get('/getCommonComplaint/:userId', getCommonComplaint);
+router.post('/markOngoing', markOngoing);
+router.post('/markSolved', markSolved);
 
 
 
-// creating hostel, caretaker, warden
+// careTaker routing
+router.post('/loginCareTaker' , loginCareTaker);
+router.get('/getAllComplaints/:userId', getAllComplaints);
+
+
+
+// admin routing :  creating hostel, caretaker, warden
 router.post('/createHostel', createHostel);
 router.post('/createCaretaker', createCaretaker);
 router.post('/createWarden', createWarden);
