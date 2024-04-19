@@ -61,7 +61,7 @@ exports.createWarden= async (req, res) => {
       });
     }
 
-    // Check if a warden is already assigned to this hostel
+    // // Check if a warden is already assigned to this hostel
     if (hostel.warden) { 
       return res.status(401).json({
         success: false,
@@ -96,7 +96,7 @@ exports.createWarden= async (req, res) => {
     console.log("Warden creating error : ", error);
     return res.status(401).json({
       success: false,
-      message: `somthing went wrong while creating Warden`,
+      message: ` errorsomthing went wrong while creating Warden`,
     });
   }
 };

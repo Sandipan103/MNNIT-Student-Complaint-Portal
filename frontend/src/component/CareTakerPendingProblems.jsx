@@ -77,7 +77,7 @@ const CareTakerPendingProblems = ({ complaints, setComplaints }) => {
 
     return (
         <div>
-            <Typography variant="h6">CareTaker Pending Problems</Typography>
+            <h2 variant="h6">Pending Problems</h2>
             <Input
                 type="text"
                 placeholder="Search by title..."

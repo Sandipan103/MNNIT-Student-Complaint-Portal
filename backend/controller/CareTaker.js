@@ -148,10 +148,21 @@ exports.loginCareTaker = async (req, res) => {
 exports.getAllComplaints = async (req, res) => {
   const userId = req.params.userId;
   try {
-    const complaints = await Complaint.find({ receivedBy: userId }).populate('createdBy', '-password');
-    res.json({
-      success: true,
-      complaints
+    const complaints = await Complaint.find({ receivedBy: userId }).populate('createdBy', '-password');;
+      // Fetch hostel name based on user ID
+      const user = await Caretaker.findById(userId);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: `User with ID ${userId} not found.`,
+        });
+      }
+      const hostel = await Hostel.findById(user.hostel).select('name');
+      // console.log(hostel.name);
+    res.json({ 
+      success: true, 
+      complaints,
+      hostelName: hostel.name, // added hostel name also
     });
   } catch (error) {
     console.error(error);

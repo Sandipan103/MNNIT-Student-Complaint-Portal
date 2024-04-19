@@ -5,7 +5,7 @@ const CareTakerSolvedProblems = ({complaints, setComplaints}) => {
 
   return (
     <div>
-        <h2> CareTakerSolvedProblems </h2>
+        <h2> Solved Problems </h2>
         <List>
         {complaints.solved.map(complaint => (
           <ListItem key={complaint._id} sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}>
