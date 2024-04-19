@@ -36,7 +36,7 @@ exports.createCaretaker = async (req, res) => {
     }
 
     // Check if a caretaker is already assigned to this hostel
-    if (hostel.careTaker) { 
+    if (hostel.careTaker) {
       return res.status(401).json({
         success: false,
         message: `A caretaker is already assigned to this hostel.`,
@@ -47,11 +47,11 @@ exports.createCaretaker = async (req, res) => {
 
     // create careTaker
     const caretaker = await Caretaker.create({
-        name,
-        contactNo,
-        email,
-        password: hashedPassword,
-        hostel: hostel._id,
+      name,
+      contactNo,
+      email,
+      password: hashedPassword,
+      hostel: hostel._id,
     });
 
     // update the hostel, adding careTaker
@@ -60,7 +60,7 @@ exports.createCaretaker = async (req, res) => {
       { careTaker: caretaker._id },
       { new: true }
     );
-    
+
     return res.status(200).json({
       success: true,
       message: `caretaker created successfully`,
@@ -77,7 +77,7 @@ exports.createCaretaker = async (req, res) => {
 
 
 // login careTaker
-exports.loginCareTaker = async(req, res) => {
+exports.loginCareTaker = async (req, res) => {
   try {
     // step-1 : fetch data
     const { email, password } = req.body;
@@ -100,7 +100,7 @@ exports.loginCareTaker = async(req, res) => {
     // step-3 : match the password with user hashed password
     const matchPassword = await bcrypt.compare(password, caretaker.password);
 
-    if(!matchPassword)  {
+    if (!matchPassword) {
       return res.status(400).json({
         success: false,
         message: `incorrect password`,
@@ -124,7 +124,7 @@ exports.loginCareTaker = async(req, res) => {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // after 24 hours
       httpOnly: true,
     };
-    
+
 
     // step-6 : save user data in cashe
     // step-7 : login
@@ -166,9 +166,9 @@ exports.getAllComplaints = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ 
-      success: false, 
-      message: "something went wrong while fetching complaints" 
+    res.status(500).json({
+      success: false,
+      message: "something went wrong while fetching complaints"
     });
   }
 };

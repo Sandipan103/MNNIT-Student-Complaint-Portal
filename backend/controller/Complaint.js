@@ -70,6 +70,11 @@ exports.createPersonalComplaint = async (req, res) => {
       { $push: { complaints: complaint._id } },
       { new: true }
     );
+    await Warden.findByIdAndUpdate(
+      hostel.warden,
+      { $push: { complaints: complaint._id } },
+      { new: true }
+    );
 
     // Step 5: Save the complaint ID in the user's pending complaints array
     await User.findByIdAndUpdate(

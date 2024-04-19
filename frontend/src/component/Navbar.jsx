@@ -31,6 +31,9 @@ const Navbar = () => {
     } else if (type === "Caretaker") {
       navigate("/loginCareTaker");
     }
+    else if(type==="Warden"){
+      navigate("/loginWarden");
+    }
   };
   const logoutHandler = async () => {
     setLoading(true);
@@ -38,6 +41,9 @@ const Navbar = () => {
       await axios.get(`${server}/logout`, {
         withCredentials: true,
       });
+      if (Cookies.get("tokenwf")) {
+        Cookies.remove("tokenwf");
+      }
       if (Cookies.get("tokencf")) {
         Cookies.remove("tokencf");
       }
@@ -74,17 +80,24 @@ const Navbar = () => {
         >
           <MenuIcon />
         </IconButton>
-
+        
         {Cookies.get("tokencf") ? (
           <Button color="inherit" component={Link} to="/caretakerdashboard">
             Dashboard
           </Button>
         ) : (
-          <Button color="inherit" component={Link} to="/dashboard">
+          Cookies.get("tokenwf")?(
+            <Button color="inherit" component={Link} to="/wardenDashboard">
             Dashboard
           </Button>
+          ):(
+            <Button color="inherit" component={Link} to="/dashboard">
+            Dashboard
+          </Button>
+          )
+          
         )}
-        {!Cookies.get("tokencf") && (
+        {(!Cookies.get("tokencf") && !Cookies.get("tokenwf")) && (
           <>
             <Button color="inherit" component={Link} to="/complaintForm">
               Complaint
@@ -126,6 +139,9 @@ const Navbar = () => {
               </MenuItem>
               <MenuItem onClick={() => handleLoginTypeSelect("Caretaker")}>
                 As caretaker
+              </MenuItem>
+              <MenuItem onClick={() => handleLoginTypeSelect("Warden")}>
+                As warden
               </MenuItem>
             </Menu>
           </>
