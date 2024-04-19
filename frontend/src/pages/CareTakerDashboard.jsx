@@ -18,7 +18,7 @@ const CareTakerDashboard = () => {
   });
   const [currentTab, setCurrentTab] = useState("pending");
   const [loading, setLoading] = useState(false); 
-
+  const [hostelName , setHostelName] = useState(null);
   const navigate = useNavigate();
 
   const fetchUserDetail = async () => {
@@ -31,8 +31,12 @@ const CareTakerDashboard = () => {
         const pendingComplaints = response.data.complaints.filter(complaint => complaint.currentStatus === 'pending');
         const ongoingComplaints = response.data.complaints.filter(complaint => complaint.currentStatus === 'ongoing');
         const solvedComplaints = response.data.complaints.filter(complaint => complaint.currentStatus === 'solved');
+       setHostelName(response.data.hostelName);
+       console.log(hostelName);
+        // const hostelid = response.data.complaints[0].hostel;
         setComplaints({pending : pendingComplaints, ongoing : ongoingComplaints, solved : solvedComplaints});
-        console.log(pendingComplaints);
+        // console.log(pendingComplaints);
+        // console.log(response.data.complaints[0].hostel);
       } catch (error) {
         toast.error('complaint not fetched');
         console.error("Error decoding token:", error);
@@ -53,6 +57,7 @@ const CareTakerDashboard = () => {
 
   return (
     <div>
+      <h1 style={{ textAlign: 'center', marginLeft: '20px' }}>{hostelName} Complaints </h1>
       {loading && <CircularProgress />}
       <Tabs value={currentTab} onChange={handleTabChange} centered>
         <Tab label="Pending" value="pending" />
