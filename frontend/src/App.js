@@ -25,7 +25,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/feed" element={<Feed />} />
-
           <Route path="/loginCareTaker" element={<LoginCareTaker />} />
           <Route path="/careTakerDashBoard" element={<CareTakerDashboard />} />
 

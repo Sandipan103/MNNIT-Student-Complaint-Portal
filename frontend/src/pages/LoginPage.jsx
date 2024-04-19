@@ -53,7 +53,7 @@ const LoginPage = () => {
       });
       console.log(isAuthenticated);
       // navigate(`/profile`);
-      toast.success(`logged in`)
+      toast.success(`logged in SuccessFully`)
     } catch (error) {
       console.error("lgoin error", error);
     } finally {
@@ -69,7 +69,7 @@ const LoginPage = () => {
           elevation={3}
           style={{ padding: "20px", borderRadius: "10px", textAlign: "center" }}
         >
-          <h1>Login Page</h1>
+          <h1>Student Login Page</h1>
           {!loading && (
             <form onSubmit={handleSubmit}>
               <TextField

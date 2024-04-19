@@ -54,7 +54,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h1>Welcome to the Dashboard</h1>
+      <h1>Welcome to the Student  Dashboard</h1>
       <Tabs value={currentTab} onChange={handleTabChange} centered>
         <Tab label="Pending" value="pending" />
         <Tab label="Ongoing" value="ongoing" />

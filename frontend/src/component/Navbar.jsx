@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Button, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -6,16 +6,41 @@ import { Context, server } from "../index.js";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 const Navbar = () => {
-  const { isAuthenticated, setIsAuthenticated, loading, setLoading } = useContext(Context);
+  const { isAuthenticated, setIsAuthenticated, loading, setLoading } =
+    useContext(Context);
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLoginTypeSelect = (type) => {
+    handleClose();
+    if (type === "Student") {
+      navigate("/login");
+    } else if (type === "Caretaker") {
+      navigate("/loginCareTaker");
+    }
+  };
   const logoutHandler = async () => {
     setLoading(true);
     try {
       await axios.get(`${server}/logout`, {
         withCredentials: true,
       });
+      if (Cookies.get("tokencf")) {
+        Cookies.remove("tokencf");
+      }
       Cookies.remove("tokenf");
       toast.success("Logged Out !!!!");
       setIsAuthenticated(false);
@@ -29,6 +54,7 @@ const Navbar = () => {
       setLoading(false);
     }
   };
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -48,27 +74,61 @@ const Navbar = () => {
         >
           <MenuIcon />
         </IconButton>
-        {/* <Button color="inherit" component={Link} to="/">Home</Button> */}
-        <Button color="inherit" component={Link} to="/complaintForm">
-          Complaint
-        </Button>
-        <Button color="inherit" component={Link} to="/feed">
-          Feed
-        </Button>
-        <Button color="inherit" component={Link} to="/dashboard">
-          Dashboard
-        </Button>
-        <Button color="inherit" component={Link} to="/profile">
-          Profile
-        </Button>
+
+        {Cookies.get("tokencf") ? (
+          <Button color="inherit" component={Link} to="/caretakerdashboard">
+            Dashboard
+          </Button>
+        ) : (
+          <Button color="inherit" component={Link} to="/dashboard">
+            Dashboard
+          </Button>
+        )}
+        {!Cookies.get("tokencf") && (
+          <>
+            <Button color="inherit" component={Link} to="/complaintForm">
+              Complaint
+            </Button>
+            <Button color="inherit" component={Link} to="/feed">
+              Feed
+            </Button>
+            <Button color="inherit" component={Link} to="/profile">
+              Profile
+            </Button>
+          </>
+        )}
         {isAuthenticated ? (
           <Button disabled={loading} onClick={logoutHandler} color="inherit">
             Logout
           </Button>
         ) : (
-          <Button color="inherit"  component={Link} to="/login">
-            Login
-          </Button>
+          // <Button color="inherit" component={Link} to="/login">
+          //   Login
+          // </Button>
+          <>
+            <Button
+              color="inherit"
+              aria-controls="login-menu"
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleClick}
+            >
+              Login
+            </Button>
+            <Menu
+              id="login-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={() => handleLoginTypeSelect("Student")}>
+                As student
+              </MenuItem>
+              <MenuItem onClick={() => handleLoginTypeSelect("Caretaker")}>
+                As caretaker
+              </MenuItem>
+            </Menu>
+          </>
         )}
       </Toolbar>
     </AppBar>

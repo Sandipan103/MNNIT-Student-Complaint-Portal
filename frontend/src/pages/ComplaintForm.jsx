@@ -60,7 +60,7 @@ const ComplaintForm = () => {
       setDescription("");
       setAdditionalDetails("");
     } catch (error) {
-      toast.error('something is wrong');
+      toast.error('Error creating complaint');
       toast.error('you have to update  your profile');
       console.error("Error creating complaint:", error);
     }
