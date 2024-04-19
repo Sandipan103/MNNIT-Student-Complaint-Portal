@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import Navbar from "./component/Navbar";
 import { Toaster } from "react-hot-toast";
 import Feed from "./pages/Feed";
+import Warden from "./pages/Warden";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/feed" element={<Feed />} />
+          <Route path="/warden" element={<Warden />} />
         </Routes>
       </Router>
       <Toaster/>

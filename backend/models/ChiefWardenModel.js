@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const chiefWardenSchema = new mongoose.Schema({
     name: {
-        type: String,
+        type: String, 
         required: true,
         trim: true
     },
