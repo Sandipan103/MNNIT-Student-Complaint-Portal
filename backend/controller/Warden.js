@@ -12,6 +12,31 @@ const Complaint = require("../models/ComplaintModel");
 
 
 //
+
+
+exports.warden = async (req, res) => {
+  try {
+      // Calculate the date three days ago
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
+      // Query to find complaints created three days ago or earlier
+      const complaints = await Complaint.find({ 
+          createdAt: { $lte: threeDaysAgo },
+          currentStatus: 'pending'
+      });
+
+      // Send the complaints as a response 
+      // console.log(complaints); 
+      res.json({ complaints });
+      console.log("sent")
+  } catch (error) {  
+      // Handle errors 
+      console.error(error);  
+      res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 exports.createWarden= async (req, res) => {
   try {
     const { name, contactNo, email, password, hostelName } = req.body;
