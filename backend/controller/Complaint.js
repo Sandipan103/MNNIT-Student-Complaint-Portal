@@ -4,6 +4,7 @@ const Hostel = require("../models/HostelModel");
 const Complaint = require("../models/ComplaintModel");
 const Caretaker = require("../models/CaretakerModel");
 const Warden = require("../models/WardenModel")
+const ChiefWarden = require("../models/ChiefWardenModel")
 
 // dependency required
 require("dotenv").config();

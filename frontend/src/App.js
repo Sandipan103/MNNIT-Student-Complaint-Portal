@@ -13,8 +13,8 @@ import WardenDashboard from "./pages/WardenDashboard";
 import LoginCareTaker from "./pages/LoginCareTaker";
 import CareTakerDashboard from "./pages/CareTakerDashboard";
 import LoginWarden from "./pages/LoginWarden";
-
-
+import LoginChiefWarden from "./pages/LoginChiefWarden";
+import ChiefWardenDashboard from "./pages/ChiefWardenDashboard";
 function App() {
   return (
     <div>
@@ -29,7 +29,9 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/feed" element={<Feed />} />
           <Route path="/loginWarden" element={<LoginWarden />} />
+          <Route path="/loginChiefWarden" element={<LoginChiefWarden />} />
           <Route path="/wardenDashboard" element={<WardenDashboard />} />
+          <Route path="/chiefWardenDashboard" element={<ChiefWardenDashboard />} />
           <Route path="/loginCareTaker" element={<LoginCareTaker />} />
           <Route path="/careTakerDashBoard" element={<CareTakerDashboard />} />
         </Routes>

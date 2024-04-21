@@ -9,7 +9,7 @@ const Hostel = require("../models/HostelModel");
 const Caretaker = require("../models/CaretakerModel");
 const Complaint = require("../models/ComplaintModel");
 
-require("dotenv").config();
+require("dotenv").config(); 
 
 
 // creating new caretaker for hostel
