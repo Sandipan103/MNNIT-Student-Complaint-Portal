@@ -62,7 +62,7 @@ exports.createPersonalComplaint = async (req, res) => {
       warden: hostel.warden,
       hostel : hostelId,
       createdAt: new Date(),
-      image: null,
+      image: image,
     });
 
     // step-4 : save this in the caretaker received complaint

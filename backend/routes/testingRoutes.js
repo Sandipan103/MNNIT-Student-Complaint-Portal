@@ -35,7 +35,7 @@ const {loginChiefWarden,chiefWarden,createChiefWarden} = require("../controller/
 
 
 // fileUpload controller
-const {imageUpload, } = require('../controller/fileUpload');
+const {imageUpload, } = require('../controller/fileUpload')
 // other controller
 
 
