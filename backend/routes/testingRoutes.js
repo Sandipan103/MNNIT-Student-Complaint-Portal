@@ -1,8 +1,12 @@
 
 // required dependency
+const cookieParser = require("cookie-parser");
 const express = require("express");
 const router = express.Router();
 
+const app = express();
+
+app.use(cookieParser)
 
 // importing required controler
 // auth controller
@@ -26,10 +30,12 @@ const {createHostel, } = require('../controller/Hostel');
 const { createCaretaker } = require("../controller/CareTaker");
 const  {createWarden,warden,loginWarden } = require("../controller/Warden");
 
+const {loginChiefWarden,chiefWarden,createChiefWarden} = require("../controller/ChiefWarden");
+
+
 
 // fileUpload controller
-const {imageUpload, } = require('../controller/fileUpload')
-
+const {imageUpload, } = require('../controller/fileUpload'
 // other controller
 
 
@@ -80,6 +86,10 @@ router.post('/imageUpload', imageUpload);
 router.post('/loginWarden',loginWarden)
 router.get('/wardenDashboard/:userId',warden);
 
+router.post('/createChiefWarden',createChiefWarden)
+
+router.post('/loginChiefWarden',loginChiefWarden);
+router.get('/chiefWardenDashboard',chiefWarden);
 
 // export route
 module.exports = router; 

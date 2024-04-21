@@ -34,6 +34,9 @@ const Navbar = () => {
     else if(type==="Warden"){
       navigate("/loginWarden");
     }
+    else if(type==="ChiefWarden"){
+      navigate("/loginChiefWarden");
+    }
   };
   const logoutHandler = async () => {
     setLoading(true);
@@ -46,6 +49,9 @@ const Navbar = () => {
       }
       if (Cookies.get("tokencf")) {
         Cookies.remove("tokencf");
+      }
+      if (Cookies.get("tokencwf")) {
+        Cookies.remove("tokencwf");
       }
       Cookies.remove("tokenf");
       toast.success("Logged Out !!!!");
@@ -85,19 +91,21 @@ const Navbar = () => {
           <Button color="inherit" component={Link} to="/caretakerdashboard">
             Dashboard
           </Button>
+        ) : Cookies.get("tokenwf") ? (
+          <Button color="inherit" component={Link} to="/wardenDashboard">
+            Dashboard
+          </Button>
+        ) : Cookies.get("tokencwf") ? (
+          <Button color="inherit" component={Link} to="/chiefWardenDashboard">
+            Dashboard
+          </Button>
         ) : (
-          Cookies.get("tokenwf")?(
-            <Button color="inherit" component={Link} to="/wardenDashboard">
+          <Button color="inherit" component={Link} to="/dashboard">
             Dashboard
           </Button>
-          ):(
-            <Button color="inherit" component={Link} to="/dashboard">
-            Dashboard
-          </Button>
-          )
-          
         )}
-        {(!Cookies.get("tokencf") && !Cookies.get("tokenwf")) && (
+
+        {(!Cookies.get("tokencf") && !Cookies.get("tokenwf") && !Cookies.get("tokencwf")) && (
           <>
             <Button color="inherit" component={Link} to="/complaintForm">
               Complaint
@@ -142,6 +150,9 @@ const Navbar = () => {
               </MenuItem>
               <MenuItem onClick={() => handleLoginTypeSelect("Warden")}>
                 As warden
+              </MenuItem>
+              <MenuItem onClick={() => handleLoginTypeSelect("ChiefWarden")}>
+                As chiefWarden
               </MenuItem>
             </Menu>
           </>
