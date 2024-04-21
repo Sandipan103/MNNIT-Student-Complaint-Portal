@@ -54,7 +54,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h1 style={{ textAlign: 'center', marginLeft: '20px' }}>Your Dashboard</h1>
+      <h1 style={{ textAlign: 'center', marginLeft: '20px', margin:'20px' }}>Your Dashboard</h1>
       <Tabs value={currentTab} onChange={handleTabChange} centered>
         <Tab label="Pending" value="pending" />
         <Tab label="Ongoing" value="ongoing" />

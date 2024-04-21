@@ -11,7 +11,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import toast from "react-hot-toast";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, Navigate, useNavigate} from "react-router-dom";
 import { Context, server } from "../index.js";
 
 const SignupPage = () => {
@@ -82,7 +82,9 @@ const SignupPage = () => {
         { withCredentials: true }
       );
       console.log(response.data);
-      toast.success(``)
+      toast.success(`OTP verified `)
+      toast.success('Navigating to Login')
+      navigate('/login');
     } catch (error) {
       toast.error(`invalid Otp ⛔ `);
       console.error("Error verifying OTP:", error);
