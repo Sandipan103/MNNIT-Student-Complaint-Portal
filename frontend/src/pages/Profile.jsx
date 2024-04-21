@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -16,6 +16,23 @@ import {
   Paper,
   Box,
 } from "@mui/material";
+import {
+  MDBCol,
+  MDBContainer,
+  MDBRow,
+  MDBCard,
+  MDBCardText,
+  MDBCardBody,
+  MDBCardImage,
+  MDBBtn,
+  MDBBreadcrumb,
+  MDBBreadcrumbItem,
+  MDBProgress,
+  MDBProgressBar,
+  MDBIcon,
+  MDBListGroup,
+  MDBListGroupItem,
+} from "mdb-react-ui-kit";
 import { Context, server } from "../index";
 import { useContext } from "react";
 import toast from "react-hot-toast";
@@ -24,7 +41,8 @@ const Profile = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [editedData, setEditedData] = useState({});
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const { isAuthenticated } = useContext(Context);
   const hostelOptions = [
@@ -46,21 +64,21 @@ const Profile = () => {
         setLoading(true);
         const decodedToken = jwtDecode(token);
         const { id: userId } = decodedToken;
-  
+
         const response = await axios.get(
           `${server}/getUserProfileById/${userId}`
         );
-  
+
         const user = response.data.user;
         console.log("userData : ", user);
         setUserData(user);
-  
-        const defaultGender = user.gender || ""; 
+
+        const defaultGender = user.gender || "";
         const defaultDateOfBirth = user.dateOfBirth || "";
-        const defaultContactNo = user.contactNo || ""; 
-        const defaultRegNo = user.regNo || ""; 
-        const defaultHostelName = user.hostel ? user.hostel.name : ""; 
-  
+        const defaultContactNo = user.contactNo || "";
+        const defaultRegNo = user.regNo || "";
+        const defaultHostelName = user.hostel ? user.hostel.name : "";
+
         setEditedData({
           firstName: user.firstName || "",
           lastName: user.lastName || "",
@@ -69,11 +87,11 @@ const Profile = () => {
           dateOfBirth: defaultDateOfBirth,
           contactNo: defaultContactNo,
           regNo: defaultRegNo,
-          roomNo : user.roomNo || "",
+          roomNo: user.roomNo || "",
           hostelName: defaultHostelName,
         });
       } catch (error) {
-        toast.error('profile data not fetched');
+        toast.error("profile data not fetched");
         console.error("Error decoding token:", error);
       } finally {
         setLoading(false);
@@ -87,8 +105,8 @@ const Profile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "contactNo" && !/^\d{0,10}$/.test(value))  {
-      toast.error('invalid contact number');
+    if (name === "contactNo" && !/^\d{0,10}$/.test(value)) {
+      toast.error("invalid contact number");
       return;
     }
     setEditedData((prevData) => ({
@@ -102,7 +120,7 @@ const Profile = () => {
     console.log("editedData : ", editedData);
     if (token) {
       try {
-        setLoading(true); 
+        setLoading(true);
         const response = await axios.put(`${server}/updateUserProfileById`, {
           userId: userData._id,
           firstName: editedData.firstName,
@@ -112,164 +130,362 @@ const Profile = () => {
           contactNo: editedData.contactNo,
           regNo: editedData.regNo,
           hostelName: editedData.hostelName,
-          roomNo : editedData.roomNo,
+          roomNo: editedData.roomNo,
         });
-        toast.success('profile updated');
+        toast.success("profile updated");
+        setIsEditing(false);
       } catch (error) {
-        toast.error('profile not updated');
+        toast.error("profile not updated");
         console.error("Error updating profile:", error);
       } finally {
         setLoading(false);
       }
     }
   };
+
+
   if (!isAuthenticated) return <Navigate to={"/login"} />;
   return (
-    <div style={{  padding: "20px" }}>
-      <Paper
-        style={{
-          width: "80%",
-          margin: "0 auto",
-          boxShadow: "0px 3px 6px #00000029",
-          padding: "20px",
-          // backgroundColor: "beige",
-        }}
-      >
-      {loading && <CircularProgress />}
-      
-      {userData && (
-        <div>
-          <Grid container spacing={2} justifyContent="flex-start">
-              <Grid item xs={12} md={3} justifyContent={"flex-start"}>
-                <Avatar
-                  alt="Profile Picture"
-                  src={userData.image}
-                  sx={{ width: 100, height: 100 }}
-                />
-              </Grid>
-              <br/>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                name="firstName"
-                label="First Name"
-                value={editedData.firstName || ""}
-                onChange={handleChange}
-                style={{ backgroundColor: "white", color: "black" }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                name="lastName"
-                label="Last Name"
-                value={userData.lastName || ""}
-                onChange={handleChange}
-                style={{ backgroundColor: "white", color: "black" }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                name="email"
-                label="Email"
-                value={userData.email || ""}
-                onChange={handleChange}
-                disabled
-                style={{ backgroundColor: "white", color: "black" }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel id="gender-label">Gender</InputLabel>
-                <Select
-                  labelId="gender-label"
-                  id="gender"
-                  name="gender"
-                  value={editedData.gender || ""}
-                  onChange={handleChange}
-                  style={{ backgroundColor: "white", color: "black" }}
-                >
-                  <MenuItem value="male">Male</MenuItem>
-                  <MenuItem value="female">Female</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}  sm={6}>
-              <TextField
-                fullWidth
-                name="dateOfBirth"
-                label="Date of Birth"
-                value={editedData.dateOfBirth || ""}
-                onChange={handleChange}
-                style={{ backgroundColor: "white", color: "black" }}
-              />
-            </Grid>
-            <Grid item xs={12}  sm={6}>
-              <TextField
-                fullWidth
-                name="contactNo"
-                label="Contact No"
-                value={editedData.contactNo || ""}
-                onChange={handleChange}
-                style={{ backgroundColor: "white", color: "black" }}
-              />
-            </Grid>
-            <Grid item xs={12}  sm={6}>
-              <TextField
-                fullWidth
-                name="regNo"
-                label="Reg No"
-                value={editedData.regNo || ""}
-                onChange={handleChange}
-                style={{ backgroundColor: "white", color: "black" }}
-              />
-            </Grid>
-            <Grid item xs={12}  sm={6}>
-              <FormControl fullWidth>
-                <InputLabel id="hostelName-label" style={{ color: "white" }}>
-                  Hostel
-                </InputLabel>
-                <Select
-                  labelId="hostelName-label"
-                  id="hostelName"
-                  name="hostelName"
-                  value={editedData.hostelName || ""}
-                  onChange={handleChange}
-                  style={{ backgroundColor: "white", color: "black" }}
-                >
-                  {hostelOptions.map((hostel, index) => (
-                    <MenuItem key={index} value={hostel}>
-                      {hostel}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                name="roomNo"
-                label="Room No"
-                value={editedData.roomNo || ""}
-                onChange={handleChange}
-                style={{ backgroundColor: "white", color: "black" }}
-              />
-            </Grid>
-          </Grid>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            style={{ marginTop: "20px" }}
+    <section style={{ backgroundColor: "#eee" }}>
+      <MDBContainer className="py-4">
+        <MDBRow>
+          <MDBCol>
+            <MDBBreadcrumb className="bg-light rounded-3 p-3 mb-4">
+              <MDBBreadcrumbItem>
+                <Link to="/">Home</Link>
+              </MDBBreadcrumbItem>
+              {/* <MDBBreadcrumbItem>
+                <a href="/profile">User</a>
+              </MDBBreadcrumbItem> */}
+              <MDBBreadcrumbItem active>User Profile</MDBBreadcrumbItem>
+              <MDBBreadcrumbItem>
+                {!isEditing && (
+                  <MDBBtn outline onClick={() => setIsEditing(true)}>
+                    Edit Profile
+                  </MDBBtn>
+                )}
+                {isEditing && (
+                  <>
+                    <MDBBtn onClick={handleSubmit}>Save</MDBBtn>
+                    <MDBBtn
+                      outline
+                      className="ms-1"
+                      onClick={() => setIsEditing(false)}
+                    >
+                      Cancel
+                    </MDBBtn>
+                  </>
+                )}
+              </MDBBreadcrumbItem>
+            </MDBBreadcrumb>
+          </MDBCol>
+        </MDBRow>
+
+        <MDBRow>
+          <MDBCol
+            lg="4"
+            className=" d-flex   justify-content-center row-cols-1 h-100"
           >
-            Save
-          </Button>
-          </Box>
-        </div>
-      )}
-      </Paper>
-    </div>
+            <MDBCard className="mb-4  h-100">
+              <MDBCardBody className="text-center  h-100">
+                <MDBCardImage
+                  src={
+                    userData?.image ||
+                    "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                  }
+                  alt="avatar"
+                  className="rounded-circle"
+                  style={{ width: "150px" }}
+                  fluid
+                />
+                <p className="text-muted mb-1">
+                {isEditing ? (
+                      <TextField
+                        name="roomNo"
+                        label="Room No"
+                        value={editedData.roomNo || ""}
+                        onChange={handleChange}
+                        style={{ backgroundColor: "white", color: "black" }}
+                      />
+                    ) : (
+                      <MDBCardText className="text-muted">
+                     Room No {editedData?.roomNo}
+                    </MDBCardText>
+                    )}
+                </p>
+                <p className="text-muted mb-4">
+                {isEditing ? (
+                      <TextField
+                        name="regNo"
+                        label="Reg No"
+                        value={editedData.regNo || ""}
+                        onChange={handleChange}
+                        style={{ backgroundColor: "white", color: "black" }}
+                      />
+                    ) : (
+                      <MDBCardText className="text-muted">
+                     Registration No {editedData?.regNo ||" " }
+                    </MDBCardText>
+                    )}
+                </p>
+                <div className="d-flex justify-content-center mb-2">
+                  <MDBBtn>
+                    <Link to="/dashboard" style={{ color: "white" }}>
+                      Dashboard
+                    </Link>
+                  </MDBBtn>
+                  <MDBBtn outline className="ms-1">
+                    <Link to="/complaintForm">Register Complaint</Link>
+                  </MDBBtn>
+                </div>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBCol>
+          <MDBCol lg="8">
+            <MDBCard className="mb-4">
+              <MDBCardBody>
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Name</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                  {isEditing ? (
+                      <TextField
+                        name="firstName"
+                        label="Name"
+                        value={editedData.firstName || ""}
+                        onChange={handleChange}
+                        style={{ backgroundColor: "white", color: "black" }}
+                      />
+                    ) : (
+                      <MDBCardText className="text-muted">
+                        {editedData?.firstName}
+                    </MDBCardText>
+                    )}
+                  </MDBCol>
+                </MDBRow>
+                <hr />
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Email</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                   <MDBCardText className="text-muted">
+                    {editedData.email}
+                    </MDBCardText> 
+                  </MDBCol>
+                </MDBRow>
+                <hr />
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Phone</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                  {isEditing ? (
+                     <TextField
+                     fullWidth
+                     name="contactNo"
+                     label="Contact No"
+                     value={editedData.contactNo || ""}
+                     onChange={handleChange}
+                     style={{ backgroundColor: "white", color: "black" }}
+                   />
+                    ) : (
+                      <MDBCardText className="text-muted">
+                      {editedData.contactNo}
+                    </MDBCardText> 
+                    )}
+                  </MDBCol>
+                </MDBRow>
+                <hr />
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Gender</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                  {isEditing ? (
+                     <FormControl fullWidth>
+                     <Select
+                       labelId="gender-label"
+                       id="gender"
+                       name="gender"
+                       value={editedData.gender || ""}
+                       onChange={handleChange}
+                       style={{ backgroundColor: "white", color: "black" }}
+                     >
+                       <MenuItem value="Male">Male</MenuItem>
+                       <MenuItem value="Female">Female</MenuItem>
+                     </Select>
+                   </FormControl>
+                    ) : (
+                      <MDBCardText className="text-muted">
+                      {editedData.gender}
+                    </MDBCardText> 
+                    )}
+                  </MDBCol>
+                </MDBRow>
+                <hr />
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Hostel</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                  {isEditing ? (
+                     <FormControl fullWidth>
+                     <Select
+                       labelId="hostelName-label"
+                       id="hostelName"
+                       name="hostelName"
+                       value={editedData.hostelName || ""}
+                       onChange={handleChange}
+                       style={{ backgroundColor: "white", color: "black" }}
+                     >
+                       {hostelOptions.map((hostel, index) => (
+                         <MenuItem key={index} value={hostel}>
+                           {hostel}
+                         </MenuItem>
+                       ))}
+                     </Select>
+                   </FormControl>
+                    ) : (
+                      <MDBCardText className="text-muted">
+                      {editedData.hostelName || " "}
+                    </MDBCardText>
+                    )}
+                  </MDBCol>
+                </MDBRow>
+              </MDBCardBody>
+            </MDBCard>
+
+            <MDBRow>
+              <MDBCol md="6">
+                <MDBCard className="mb-4 mb-md-0">
+                  <MDBCardBody>
+                    <MDBCardText className="mb-4">
+                      <span className="text-primary font-italic me-1">
+                        Your Complaints
+                      </span>{" "}
+                      Pending
+                    </MDBCardText>
+                    <MDBCardText
+                      className="mb-1"
+                      style={{ fontSize: ".77rem" }}
+                    >
+                      Web Design
+                    </MDBCardText>
+                    <MDBProgress className="rounded">
+                      <MDBProgressBar width={80} valuemin={0} valuemax={100} />
+                    </MDBProgress>
+
+                    <MDBCardText
+                      className="mt-4 mb-1"
+                      style={{ fontSize: ".77rem" }}
+                    >
+                      Website Markup
+                    </MDBCardText>
+                    <MDBProgress className="rounded">
+                      <MDBProgressBar width={72} valuemin={0} valuemax={100} />
+                    </MDBProgress>
+
+                    <MDBCardText
+                      className="mt-4 mb-1"
+                      style={{ fontSize: ".77rem" }}
+                    >
+                      One Page
+                    </MDBCardText>
+                    <MDBProgress className="rounded">
+                      <MDBProgressBar width={89} valuemin={0} valuemax={100} />
+                    </MDBProgress>
+
+                    <MDBCardText
+                      className="mt-4 mb-1"
+                      style={{ fontSize: ".77rem" }}
+                    >
+                      Mobile Template
+                    </MDBCardText>
+                    <MDBProgress className="rounded">
+                      <MDBProgressBar width={55} valuemin={0} valuemax={100} />
+                    </MDBProgress>
+
+                    <MDBCardText
+                      className="mt-4 mb-1"
+                      style={{ fontSize: ".77rem" }}
+                    >
+                      Backend API
+                    </MDBCardText>
+                    <MDBProgress className="rounded">
+                      <MDBProgressBar width={66} valuemin={0} valuemax={100} />
+                    </MDBProgress>
+                  </MDBCardBody>
+                </MDBCard>
+              </MDBCol>
+
+              <MDBCol md="6">
+                <MDBCard className="mb-4 mb-md-0">
+                  <MDBCardBody>
+                    <MDBCardText className="mb-4">
+                      <span className="text-primary font-italic me-1">
+                        Your Compaints
+                      </span>{" "}
+                      Solved
+                    </MDBCardText>
+                    <MDBCardText
+                      className="mb-1"
+                      style={{ fontSize: ".77rem" }}
+                    >
+                      Web Design
+                    </MDBCardText>
+                    <MDBProgress className="rounded">
+                      <MDBProgressBar width={80} valuemin={0} valuemax={100} />
+                    </MDBProgress>
+
+                    <MDBCardText
+                      className="mt-4 mb-1"
+                      style={{ fontSize: ".77rem" }}
+                    >
+                      Website Markup
+                    </MDBCardText>
+                    <MDBProgress className="rounded">
+                      <MDBProgressBar width={72} valuemin={0} valuemax={100} />
+                    </MDBProgress>
+
+                    <MDBCardText
+                      className="mt-4 mb-1"
+                      style={{ fontSize: ".77rem" }}
+                    >
+                      One Page
+                    </MDBCardText>
+                    <MDBProgress className="rounded">
+                      <MDBProgressBar width={89} valuemin={0} valuemax={100} />
+                    </MDBProgress>
+
+                    <MDBCardText
+                      className="mt-4 mb-1"
+                      style={{ fontSize: ".77rem" }}
+                    >
+                      Mobile Template
+                    </MDBCardText>
+                    <MDBProgress className="rounded">
+                      <MDBProgressBar width={55} valuemin={0} valuemax={100} />
+                    </MDBProgress>
+
+                    <MDBCardText
+                      className="mt-4 mb-1"
+                      style={{ fontSize: ".77rem" }}
+                    >
+                      Backend API
+                    </MDBCardText>
+                    <MDBProgress className="rounded">
+                      <MDBProgressBar width={66} valuemin={0} valuemax={100} />
+                    </MDBProgress>
+                  </MDBCardBody>
+                </MDBCard>
+              </MDBCol>
+            </MDBRow>
+          </MDBCol>
+        </MDBRow>
+      </MDBContainer>
+    </section>
   );
 };
 
