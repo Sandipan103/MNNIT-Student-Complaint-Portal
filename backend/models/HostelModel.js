@@ -11,10 +11,12 @@ const hostelSchema = new mongoose.Schema({
     careTaker: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Caretaker",
+        required:false,
     },
     warden: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Warden",
+        required:false,
     },
     wings: [{
         wingNo: { type: String },

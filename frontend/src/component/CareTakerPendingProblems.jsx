@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from "axios";
-import { Typography, Input, Select, MenuItem, List, ListItem, ListItemText, ListItemSecondaryAction, Button, CircularProgress } from "@mui/material";
 import { Context, server } from "../index.js";
+import { Input, Select, MenuItem, List, ListItem, ListItemText, ListItemSecondaryAction, Button } from "@mui/material";
 import toast from "react-hot-toast";
 import * as XLSX from 'xlsx';
 import "../styles/CareTakerDashBoard.css";
@@ -15,8 +15,8 @@ const CareTakerPendingProblems = ({ complaints, setComplaints }) => {
         try {
             const response = await axios.post(
                 `${server}/markOngoing`,
-                { complaintId : complaintId, }
-              )
+                { complaintId: complaintId }
+            );
             const pendingComplaintIndex = complaints.pending.findIndex(complaint => complaint._id === complaintId);
             if (pendingComplaintIndex !== -1) {
                 const pendingComplaint = complaints.pending[pendingComplaintIndex];
@@ -30,25 +30,21 @@ const CareTakerPendingProblems = ({ complaints, setComplaints }) => {
                     ongoing: [...prevState.ongoing, pendingComplaint]
                 }));
             }
-            toast.success('complaints marked ongoing');
+            toast.success('Complaint marked ongoing');
         } catch (error) {
-            toast.error('something went wrong');
+            toast.error('Something went wrong');
             console.error('Error moving pending complaint to ongoing:', error);
         }
     }
 
     const filteredComplaints = complaints.pending.filter(complaint => {
-        // Filter based on title
         const titleMatch = complaint.title.toLowerCase().includes(searchTerm.toLowerCase());
-        // Filter based on categoryType
         const categoryTypeMatch = !filterCategoryType || filterCategoryType === 'all' || complaint.category.categoryType === filterCategoryType;
-        // Filter based on subCategoryType
         const subCategoryTypeMatch = !filterSubCategoryType || filterSubCategoryType === 'all' || complaint.category.subCategoryType === filterSubCategoryType;
         return titleMatch && categoryTypeMatch && subCategoryTypeMatch;
     });
 
     const handleDownloadExcel = () => {
-        // console.log(filteredComplaints);
         const downloadComplaints = filteredComplaints.map(complaint => ({
             title: complaint.title,
             description: complaint.description,
@@ -59,76 +55,70 @@ const CareTakerPendingProblems = ({ complaints, setComplaints }) => {
             contactNo: complaint.createdBy.contactNo,
             createdAt: complaint.createdAt,
             upvoteCount: complaint.upvotes.length,
-            cost : "",
+            cost: "",
         }));
-        // console.log(downloadComplaints);
-        // Create a new workbook
+
         const wb = XLSX.utils.book_new();
-
-        // Convert data to worksheet
         const ws = XLSX.utils.json_to_sheet(downloadComplaints);
-
-        // Add the worksheet to the workbook
         XLSX.utils.book_append_sheet(wb, ws, "Pending Complaints");
-
-        // Generate the Excel file and trigger the download
         XLSX.writeFile(wb, "pending_complaints.xlsx");
     }
 
     return (
-        <div>
+        <div className='pending-complaints'>
             <h2 variant="h6">Pending Problems</h2>
-            <Input
-                type="text"
-                placeholder="Search by title..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Select
-                value={filterCategoryType}
-                onChange={(e) => setFilterCategoryType(e.target.value)}
-            >
-                <MenuItem value="all">All Categories</MenuItem>
-                <MenuItem value="personal">Personal</MenuItem>
-                <MenuItem value="common">Common</MenuItem>
-            </Select>
-            <Select
-                value={filterSubCategoryType}
-                onChange={(e) => setFilterSubCategoryType(e.target.value)}
-            >
-                <MenuItem value="all">All Subcategories</MenuItem>
-                <MenuItem value="electricity">Electricity</MenuItem>
-                <MenuItem value="civil">Civil</MenuItem>
-                <MenuItem value="cleaning">Cleaning</MenuItem>
-                <MenuItem value="water">Water</MenuItem>
-                <MenuItem value="bathroom">Bathroom</MenuItem>
-                <MenuItem value="light">Light</MenuItem>
-                <MenuItem value="other">Other</MenuItem>
-            </Select>
-            <Button onClick={handleDownloadExcel}>Download Excel</Button>
+            <div className="search-sort-container">
+                <Input
+                    type="text"
+                    placeholder="Search by title..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <Select
+                    value={filterCategoryType}
+                    onChange={(e) => setFilterCategoryType(e.target.value)}
+                    className="filter-select"
+                >
+                    <MenuItem value="all">All Categories</MenuItem>
+                    <MenuItem value="personal">Personal</MenuItem>
+                    <MenuItem value="common">Common</MenuItem>
+                </Select>
+                <Select
+                    value={filterSubCategoryType}
+                    onChange={(e) => setFilterSubCategoryType(e.target.value)}
+                    className="filter-select"
+                >
+                    <MenuItem value="all">All Subcategories</MenuItem>
+                    {/* Other MenuItems */}
+                </Select>
+                <Button onClick={handleDownloadExcel} className="download-button">Download Excel</Button>
+            </div>
             <List>
                 {filteredComplaints.map(complaint => (
                     <ListItem key={complaint._id} className="list-item-container">
                         <ListItemText
                             primary={complaint.title}
                             secondary={complaint.description}
+                            className="list-item-text"
                         />
                         <ListItemText
                             primary={`Category: ${complaint.category.categoryType}`}
                             secondary={`Sub-Category: ${complaint.category.subCategoryType}`}
+                            className="list-item-text"
                         />
                         <ListItemText
                             primary={`Created By: ${complaint.createdBy.firstName} ${complaint.createdBy.lastName}`}
                             secondary={`Reg No: ${complaint.createdBy.regNo}, Room No: ${complaint.createdBy.roomNo}`}
+                            className="list-item-text"
                         />
                         <ListItemSecondaryAction>
-                            <Button onClick={() => handleSeenClick(complaint._id)}>Seen</Button>
+                            <Button onClick={() => handleSeenClick(complaint._id)} className="mark-as-seen-button">Seen</Button>
                         </ListItemSecondaryAction>
                     </ListItem>
                 ))}
             </List>
         </div>
-    )
+    );
 }
 
 export default CareTakerPendingProblems;
