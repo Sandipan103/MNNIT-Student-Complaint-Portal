@@ -29,7 +29,13 @@ const {loginCareTaker, getAllComplaints} = require("../controller/CareTaker");
 const {createHostel, } = require('../controller/Hostel');
 const { createCaretaker } = require("../controller/CareTaker");
 const  {createWarden,warden,loginWarden } = require("../controller/Warden");
+
 const {loginChiefWarden,chiefWarden,createChiefWarden} = require("../controller/ChiefWarden");
+
+
+
+// fileUpload controller
+const {imageUpload, } = require('../controller/fileUpload'
 // other controller
 
 
@@ -69,7 +75,12 @@ router.post('/createWarden', createWarden);
 
 
 
+// file upload routing
+router.post('/imageUpload', imageUpload);
+
+
 // other routing
+
 // router.get('/caretakerInfo',careTakerInfo);
 // router.get('/WardenInfo',WardenInfo);
 router.post('/loginWarden',loginWarden)
