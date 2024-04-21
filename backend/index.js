@@ -19,9 +19,20 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
+// fileupload add
+const fileUpload = require("express-fileupload");
+app.use(fileUpload({
+    useTempFiles : true,
+    tempFileDir : '/tmp/'
+}));
+
 // connect with db
 const dbConnect = require("./config/database");
 dbConnect();
+
+// connect with cloude 
+const cloudinary = require("./config/cloudinary");
+cloudinary.cloudinaryConnect();
 
 // routing
 const testingRoutes = require("./routes/testingRoutes");
