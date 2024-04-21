@@ -16,6 +16,8 @@ import { Context, server } from "../index.js";
 import toast from "react-hot-toast";
 
 const LoginCareTaker = () => {
+  const {isAuthenticated,setIsAuthenticated} = useContext(Context);
+
   const [careTakerDetail, setCareTakerDetail] = useState({
     email: "",
     password: "",
@@ -44,6 +46,8 @@ const LoginCareTaker = () => {
         { email: careTakerDetail.email, password: careTakerDetail.password },
         { withCredentials: true }
       );
+      setIsAuthenticated(true);
+
       Cookies.set("tokencf", response.data.tokenc, {
         expires: 1,
       });
@@ -55,6 +59,7 @@ const LoginCareTaker = () => {
       setLoading(false);
     }
   };
+  if (isAuthenticated) return <Navigate to={"/caretakerdashboard"} />;
 
   return (
     <Grid container justifyContent="center" alignItems="center">
@@ -63,7 +68,7 @@ const LoginCareTaker = () => {
           elevation={3}
           style={{ padding: "20px", borderRadius: "10px", textAlign: "center" }}
         >
-          <h1>Login Page for CareTaker</h1>
+          <h1>CareTaker Login Page</h1>
           {!loading && (
             <form onSubmit={handleSubmit}>
               <TextField
