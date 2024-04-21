@@ -79,6 +79,7 @@ const Profile = () => {
         const defaultContactNo = user.contactNo || "";
         const defaultRegNo = user.regNo || "";
         const defaultHostelName = user.hostel ? user.hostel.name : "";
+        const defaultImage = user.image?user.image:"NULL";
         setEditedData({
           firstName: user.firstName || "",
           lastName: user.lastName || "",
@@ -219,7 +220,7 @@ const Profile = () => {
                       />
                     ) : (
                       <MDBCardText className="text-muted">
-                     Room No {editedData?.roomNo}
+                     Room No {editedData.roomNo}
                     </MDBCardText>
                     )}
                 </p>
@@ -234,7 +235,7 @@ const Profile = () => {
                       />
                     ) : (
                       <MDBCardText className="text-muted">
-                     Registration No {editedData?.regNo ||" " }
+                     Registration No {editedData.regNo ||" " }
                     </MDBCardText>
                     )}
                 </p>
