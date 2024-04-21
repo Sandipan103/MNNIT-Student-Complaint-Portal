@@ -25,6 +25,7 @@ const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [editedData, setEditedData] = useState({});
   const [loading, setLoading] = useState(false); 
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const { isAuthenticated } = useContext(Context);
   const hostelOptions = [
@@ -60,6 +61,7 @@ const Profile = () => {
         const defaultContactNo = user.contactNo || ""; 
         const defaultRegNo = user.regNo || ""; 
         const defaultHostelName = user.hostel ? user.hostel.name : ""; 
+        const defaultImage = user.image ? user.image : "NULL";
   
         setEditedData({
           firstName: user.firstName || "",
@@ -71,6 +73,7 @@ const Profile = () => {
           regNo: defaultRegNo,
           roomNo : user.roomNo || "",
           hostelName: defaultHostelName,
+          image : defaultImage,
         });
       } catch (error) {
         toast.error('profile data not fetched');
@@ -95,6 +98,15 @@ const Profile = () => {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+  setSelectedFile(file);
+  setEditedData((prevData) => ({
+    ...prevData,
+    image: ``,
+  }));
   };
 
   const handleSubmit = async () => {
@@ -143,9 +155,10 @@ const Profile = () => {
               <Grid item xs={12} md={3} justifyContent={"flex-start"}>
                 <Avatar
                   alt="Profile Picture"
-                  src={userData.image}
+                  src={editedData.image}
                   sx={{ width: 100, height: 100 }}
                 />
+                <input type="file" onChange={handleFileChange} />
               </Grid>
               <br/>
             <Grid item xs={12} sm={4}>
@@ -163,7 +176,7 @@ const Profile = () => {
                 fullWidth
                 name="lastName"
                 label="Last Name"
-                value={userData.lastName || ""}
+                value={editedData.lastName || ""}
                 onChange={handleChange}
                 style={{ backgroundColor: "white", color: "black" }}
               />

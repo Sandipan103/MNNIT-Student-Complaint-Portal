@@ -26,6 +26,10 @@ const {createHostel, } = require('../controller/Hostel');
 const { createCaretaker } = require("../controller/CareTaker");
 const  {createWarden } = require("../controller/Warden");
 
+
+// fileUpload controller
+const {imageUpload, } = require('../controller/fileUpload')
+
 // other controller
 
 
@@ -64,7 +68,13 @@ router.post('/createWarden', createWarden);
 
 
 
+
+// file upload routing
+router.post('/imageUpload', imageUpload);
+
+
 // other routing
+
 
 
 
