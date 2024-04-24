@@ -56,7 +56,7 @@ const LoginPage = () => {
       // navigate(`/profile`);
       toast.success(`logged in SuccessFully`);
     } catch (error) {
-      console.error(error);
+      console.error("lgoin error", error);
     } finally {
       setLoading(false);
     }
@@ -64,16 +64,17 @@ const LoginPage = () => {
 
   if (isAuthenticated) return <Navigate to={"/profile"} />;
   return (
-    <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 ">
+    <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-lg">
         <h1 className="text-center text-2xl font-bold text-indigo-600 sm:text-3xl">
-          Sign in
+          Get started today
         </h1>
 
         <p className="mx-auto mt-4 max-w-md text-center text-gray-500">
-          Sign in to access your account and manage your complaints.
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati
+          sunt dolores deleniti inventore quaerat mollitia?
         </p>
-
+        {!loading && (
         <form
           onSubmit={handleSubmit}
           className="mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8"
@@ -97,7 +98,7 @@ const LoginPage = () => {
                 placeholder="Enter email"
               />
 
-              <span className="absolute inset-y-0 end-0 grid place-content-center px-4 ">
+              <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="size-4 text-gray-400"
@@ -129,17 +130,26 @@ const LoginPage = () => {
                 onChange={handleChange}
                 className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                 placeholder="Enter password"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        edge="end"
+                        onClick={handleTogglePasswordVisibility}
+                      >
+                        {showPassword ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOffIcon />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
 
-              <span className="absolute inset-y-0 end-0 grid place-content-center px-4 ">
-                <IconButton edge="end" onClick={handleTogglePasswordVisibility}>
-                  {showPassword ? (
-                    <VisibilityIcon className="text-gray-400 size-2" />
-                  ) : (
-                    <VisibilityOffIcon  className="text-gray-400 size-2"  />
-                  )}
-                </IconButton>
-                {/* <svg
+              <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
+                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="size-4 text-gray-400"
                   fill="none"
@@ -158,10 +168,11 @@ const LoginPage = () => {
                     strokeWidth="2"
                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                   />
-                </svg> */}
+                </svg>
               </span>
             </div>
           </div>
+
           <button
             type="submit"
             className="block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white"
@@ -169,94 +180,16 @@ const LoginPage = () => {
             Sign in
           </button>
 
-          <p className="text-center text-sm text-gray-500 ">
+          <p className="text-center text-sm text-gray-500">
             No account?
-            <a className="ml-2" href="/signup">
+            <a className="underline" href="/signup">
               Sign up
             </a>
           </p>
         </form>
+        )}
       </div>
     </div>
-
-    // <Grid container justifyContent="center" alignItems="center">
-    //   <Grid item xs={12} sm={8} md={6} lg={4}>
-    //     <Paper
-    //       elevation={3}
-    //       style={{ padding: "20px", borderRadius: "10px", textAlign: "center" }}
-    //     >
-    //       <h1>Student Login Page</h1>
-    //       {!loading && (
-    //         <form onSubmit={handleSubmit}>
-    //           <TextField
-    //             label="Email"
-    //             variant="outlined"
-    //             type="email"
-    //             name="email"
-    //             value={userDetail.email}
-    //             onChange={handleChange}
-    //             fullWidth
-    //             margin="normal"
-    //           />
-    //           <TextField
-    //             label="Password"
-    //             variant="outlined"
-    //             type={showPassword ? "text" : "password"}
-    //             name="password"
-    //             value={userDetail.password}
-    //             onChange={handleChange}
-    //             fullWidth
-    //             margin="normal"
-    //             InputProps={{
-    //               endAdornment: (
-    //                 <InputAdornment position="end">
-    //                   <IconButton
-    //                     edge="end"
-    //                     onClick={handleTogglePasswordVisibility}
-    //                   >
-    //                     {showPassword ? (
-    //                       <VisibilityIcon />
-    //                     ) : (
-    //                       <VisibilityOffIcon />
-    //                     )}
-    //                   </IconButton>
-    //                 </InputAdornment>
-    //               ),
-    //             }}
-    //           />
-    //           <Button
-    //             type="submit"
-    //             variant="contained"
-    //             color="primary"
-    //             fullWidth
-    //             style={{ marginTop: "10px" }}
-    //           >
-    //             Login
-    //           </Button>
-    //         </form>
-    //       )}
-
-    //       {loading && <CircularProgress size={100} />}
-    //       {!isAuthenticated && (
-    //         <h4 style={{ margin: "20px", fontSize: "16px", color: "black" }}>
-    //           Not Signed Up ? Sign Up here
-    //         </h4>
-    //       )}
-
-    //       {/* Signup button */}
-    //       <Button
-    //         variant="outlined"
-    //         color="primary"
-    //         fullWidth
-    //         style={{ marginTop: "10px" }}
-    //         component={Link}
-    //         to="/signup"
-    //       >
-    //         Sign Up
-    //       </Button>
-    //     </Paper>
-    //   </Grid>
-    // </Grid>
   );
 };
 
