@@ -52,6 +52,7 @@ const PendingProblems = ({ complaints }) => {
               {complaint.currentStatus} | Time of Complaint:{" "}
               {new Date(complaint.createdAt).toLocaleString()}
             </p>
+            <p>Created By: {complaint.createdBy}</p>
           </div>
           {selectedComplaint && selectedComplaint._id === complaint._id && (
             <div className="details-overlay">
@@ -62,7 +63,7 @@ const PendingProblems = ({ complaints }) => {
                 }}
                 className="close-button"
               >
-                X
+                
               </button>
               <p> Subcategory: {complaint.category.subCategoryType} </p>
               <p>Description: {complaint.description}</p>
@@ -82,3 +83,4 @@ const PendingProblems = ({ complaints }) => {
 };
 
 export default PendingProblems;
+

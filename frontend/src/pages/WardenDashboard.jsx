@@ -40,8 +40,7 @@ const WardenDashboard = () => {
     }, []); 
 
     return (
-        <div style={{ width: "90%", margin: "0 auto" }}>
-            <h1 style={{margin:"20px"}}>Warden Dashboard</h1>
+        <div  className="text-4xl mt-5 mb-5">
           <WardenPendingProblems complaints = {complaints} setComplaints = {setComplaints} />
         </div>
     );

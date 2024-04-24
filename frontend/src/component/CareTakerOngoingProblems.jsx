@@ -1,34 +1,38 @@
-import React from 'react'
-import { Typography, Input, Select, MenuItem, List, ListItem, ListItemText, ListItemSecondaryAction, Button,CircularProgress, Tabs, Tab, } from "@mui/material";
-import "../styles/Dashboard.css";
-
-const CareTakerOngoingProblems = ({complaints, setComplaints}) => {
-
+import React from 'react';
+import { Typography, Table, TableHead, TableBody, TableRow, TableCell } from "@mui/material";
+import "../styles/CareTakerDashBoard.css";
+const CareTakerOngoingProblems = ({ complaints }) => {
   return (
-    <div className='pending-container'>
-        <h2>Ongoing Problems </h2>
-        <div className='pending-complaint-container'>
-        <List>
-        {complaints.ongoing.map(complaint => (
-          <ListItem key={complaint._id} sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}>
-            <ListItemText
-              primary={complaint.title}
-              secondary={complaint.description}
-            />
-            <ListItemText
-              primary={`Category: ${complaint.category.categoryType}`}
-              secondary={`Sub-Category: ${complaint.category.subCategoryType}`}
-            />
-            <ListItemText
-              primary={`Created By: ${complaint.createdBy.firstName} ${complaint.createdBy.lastName}`}
-              secondary={`Reg No: ${complaint.createdBy.regNo}, Room No: ${complaint.createdBy.roomNo}`}
-            />
-          </ListItem>
-        ))}
-      </List>
-      </div>
+    <div>
+      <h2 className='text-4xl '>Ongoing Problems</h2>
+      <Table className="table-container mt-10" >
+        <TableHead>
+          <TableRow>
+            <TableCell>Title</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell>Category</TableCell>
+            <TableCell>Sub-Category</TableCell>
+            <TableCell>Created By</TableCell>
+            <TableCell>Registration No</TableCell>
+            <TableCell>Room No</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {complaints.ongoing.map(complaint => (
+            <TableRow key={complaint._id} >
+              <TableCell>{complaint.title}</TableCell>
+              <TableCell>{complaint.description}</TableCell>
+              <TableCell>{complaint.category.categoryType}</TableCell>
+              <TableCell>{complaint.category.subCategoryType}</TableCell>
+              <TableCell>{`${complaint.createdBy.firstName} ${complaint.createdBy.lastName}`}</TableCell>
+              <TableCell>{complaint.createdBy.regNo}</TableCell>
+              <TableCell>{complaint.createdBy.roomNo}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
-  )
-}
+  );
+};
 
-export default CareTakerOngoingProblems
+export default CareTakerOngoingProblems;

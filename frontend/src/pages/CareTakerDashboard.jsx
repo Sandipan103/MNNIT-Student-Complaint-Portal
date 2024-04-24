@@ -57,7 +57,7 @@ const CareTakerDashboard = () => {
 
   return (
     <div>
-      <h1 style={{ textAlign: 'center', marginLeft: '20px' }}>{hostelName} Complaints </h1>
+      <h1  className="text-4xl mt-5 mb-5"style={{ textAlign: 'center', marginLeft: '20px' }}>{hostelName} Complaints </h1>
       {loading && <CircularProgress />}
       <Tabs value={currentTab} onChange={handleTabChange} centered>
         <Tab label="Pending" value="pending" />

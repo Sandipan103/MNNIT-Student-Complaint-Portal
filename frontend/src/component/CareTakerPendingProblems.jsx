@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from "axios";
+// import { Typography, Input, Select, MenuItem, List, ListItem, ListItemText, ListItemSecondaryAction, Button, CircularProgress } from "@mui/material";
+import { Table, TableHead, TableBody, TableRow, TableCell } from "@mui/material";
 import { Context, server } from "../index.js";
 import { Input, Select, MenuItem, List, ListItem, ListItemText, ListItemSecondaryAction, Button } from "@mui/material";
 import toast from "react-hot-toast";
@@ -65,59 +67,73 @@ const CareTakerPendingProblems = ({ complaints, setComplaints }) => {
     }
 
     return (
-        <div className='pending-complaints'>
-            <h2 variant="h6">Pending Problems</h2>
-            <div className="search-sort-container">
-                <Input
-                    type="text"
-                    placeholder="Search by title..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <Select
-                    value={filterCategoryType}
-                    onChange={(e) => setFilterCategoryType(e.target.value)}
-                    className="filter-select"
-                >
-                    <MenuItem value="all">All Categories</MenuItem>
-                    <MenuItem value="personal">Personal</MenuItem>
-                    <MenuItem value="common">Common</MenuItem>
-                </Select>
-                <Select
-                    value={filterSubCategoryType}
-                    onChange={(e) => setFilterSubCategoryType(e.target.value)}
-                    className="filter-select"
-                >
-                    <MenuItem value="all">All Subcategories</MenuItem>
-                    {/* Other MenuItems */}
-                </Select>
-                <Button onClick={handleDownloadExcel} className="download-button">Download Excel</Button>
-            </div>
-            <List>
-                {filteredComplaints.map(complaint => (
-                    <ListItem key={complaint._id} className="list-item-container">
-                        <ListItemText
-                            primary={complaint.title}
-                            secondary={complaint.description}
-                            className="list-item-text"
-                        />
-                        <ListItemText
-                            primary={`Category: ${complaint.category.categoryType}`}
-                            secondary={`Sub-Category: ${complaint.category.subCategoryType}`}
-                            className="list-item-text"
-                        />
-                        <ListItemText
-                            primary={`Created By: ${complaint.createdBy.firstName} ${complaint.createdBy.lastName}`}
-                            secondary={`Reg No: ${complaint.createdBy.regNo}, Room No: ${complaint.createdBy.roomNo}`}
-                            className="list-item-text"
-                        />
-                        <ListItemSecondaryAction>
-                            <Button onClick={() => handleSeenClick(complaint._id)} className="mark-as-seen-button">Seen</Button>
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                ))}
-            </List>
-        </div>
+        <div>
+            <h2 className='text-4xl '>Pending Problems</h2>
+            <Input
+                type="text"
+                placeholder="Search by title..."
+                value={searchTerm}
+                className='mr-10 mt-10 '
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Select
+                value={filterCategoryType}
+                className='mr-5'
+                onChange={(e) => setFilterCategoryType(e.target.value)}
+            >
+                <MenuItem value="all">All Categories</MenuItem>
+                <MenuItem value="personal">Personal</MenuItem>
+                <MenuItem value="common">Common</MenuItem>
+            </Select>
+            <Select
+                value={filterSubCategoryType}
+                className='mr-10'
+                onChange={(e) => setFilterSubCategoryType(e.target.value)}
+            >
+                <MenuItem value="all">All Subcategories</MenuItem>
+                <MenuItem value="electricity">Electricity</MenuItem>
+                <MenuItem value="civil">Civil</MenuItem>
+                <MenuItem value="cleaning">Cleaning</MenuItem>
+                <MenuItem value="water">Water</MenuItem>
+                <MenuItem value="bathroom">Bathroom</MenuItem>
+                <MenuItem value="light">Light</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
+            </Select>
+            <Button variant="outlined" onClick={handleDownloadExcel}>Download Excel</Button>
+            <div>
+            <Table className="table-container mt-10">
+    <TableHead>
+        <TableRow>
+            <TableCell>Title</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell>Category</TableCell>
+            <TableCell>Sub-Category</TableCell>
+            <TableCell>Created By</TableCell>
+            <TableCell>Registration No</TableCell>
+            <TableCell>Room No</TableCell>
+            <TableCell>Action</TableCell>
+        </TableRow>
+    </TableHead>
+    <TableBody>
+        {filteredComplaints.map(complaint => (
+            <TableRow key={complaint._id}>
+                <TableCell>{complaint.title}</TableCell>
+                <TableCell>{complaint.description}</TableCell>
+                <TableCell>{complaint.category.categoryType}</TableCell>
+                <TableCell>{complaint.category.subCategoryType}</TableCell>
+                <TableCell>{`${complaint.createdBy.firstName} ${complaint.createdBy.lastName}`}</TableCell>
+                <TableCell>{complaint.createdBy.regNo}</TableCell>
+                <TableCell>{complaint.createdBy.roomNo}</TableCell>
+                <TableCell className="button-container">
+                    <Button onClick={() => handleSeenClick(complaint._id)}>Seen</Button>
+                </TableCell>
+            </TableRow>
+        ))}
+    </TableBody>
+</Table>
+
+</div>
+</div>          
     );
 }
 
