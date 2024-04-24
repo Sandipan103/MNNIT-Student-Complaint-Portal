@@ -49,6 +49,7 @@ exports.createPersonalComplaint = async (req, res) => {
     }
 
     // step-3 : create the complaint
+    
     const complaint = await Complaint.create({
       category: {
         categoryType: categoryType,
@@ -60,6 +61,7 @@ exports.createPersonalComplaint = async (req, res) => {
       createdBy: userId,
       receivedBy: hostel.careTaker,
       warden: hostel.warden,
+      upvotes:[userId],
       hostel : hostelId,
       createdAt: new Date(),
       image: null,

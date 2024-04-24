@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import axios from "axios";
-import { Typography, Input, Select, MenuItem, List, ListItem, ListItemText, ListItemSecondaryAction, Button, CircularProgress } from "@mui/material";
+import { Typography, Input, Select, MenuItem, Button, Table, TableHead, TableBody, TableRow, TableCell } from "@mui/material";
 import { Context, server } from "../index.js";
 import toast from "react-hot-toast";
 import * as XLSX from 'xlsx';
@@ -11,19 +10,17 @@ const CareTakerPendingProblems = ({ complaints }) => {
     const [filterCategoryType, setFilterCategoryType] = useState('all');
     const [filterSubCategoryType, setFilterSubCategoryType] = useState('all');
 
-    console.log(complaints)
     const filteredComplaints = complaints ? complaints.filter(complaint => {
-      // Filter based on title
-      const titleMatch = complaint.title.toLowerCase().includes(searchTerm.toLowerCase());
-      // Filter based on categoryType
-      const categoryTypeMatch = !filterCategoryType || filterCategoryType === 'all' || complaint.category.categoryType === filterCategoryType;
-      // Filter based on subCategoryType
-      const subCategoryTypeMatch = !filterSubCategoryType || filterSubCategoryType === 'all' || complaint.category.subCategoryType === filterSubCategoryType;
-      return titleMatch && categoryTypeMatch && subCategoryTypeMatch;
-  }) : [];
+        // Filter based on title
+        const titleMatch = complaint.title.toLowerCase().includes(searchTerm.toLowerCase());
+        // Filter based on categoryType
+        const categoryTypeMatch = !filterCategoryType || filterCategoryType === 'all' || complaint.category.categoryType === filterCategoryType;
+        // Filter based on subCategoryType
+        const subCategoryTypeMatch = !filterSubCategoryType || filterSubCategoryType === 'all' || complaint.category.subCategoryType === filterSubCategoryType;
+        return titleMatch && categoryTypeMatch && subCategoryTypeMatch;
+    }) : [];
 
     const handleDownloadExcel = () => {
-        // console.log(filteredComplaints);
         const downloadComplaints = filteredComplaints.map(complaint => ({
             title: complaint.title,
             description: complaint.description,
@@ -34,33 +31,27 @@ const CareTakerPendingProblems = ({ complaints }) => {
             contactNo: complaint.createdBy.contactNo,
             createdAt: complaint.createdAt,
             upvoteCount: complaint.upvotes.length,
-            cost : "",
+            cost: "",
         }));
-        // console.log(downloadComplaints);
-        // Create a new workbook
         const wb = XLSX.utils.book_new();
-
-        // Convert data to worksheet
         const ws = XLSX.utils.json_to_sheet(downloadComplaints);
-
-        // Add the worksheet to the workbook
         XLSX.utils.book_append_sheet(wb, ws, "Pending Complaints");
-
-        // Generate the Excel file and trigger the download
         XLSX.writeFile(wb, "pending_complaints.xlsx");
     }
 
     return (
         <div>
-            <h2 variant="h6">Chief Warden Pending Problems</h2>
+            <h2 className='text-4xl ml-5'>Warden Pending Problems</h2>
             <Input
                 type="text"
                 placeholder="Search by title..."
                 value={searchTerm}
+                className='mr-10 mt-10 ml-5'
                 onChange={(e) => setSearchTerm(e.target.value)}
             />
             <Select
                 value={filterCategoryType}
+                className='mr-5'
                 onChange={(e) => setFilterCategoryType(e.target.value)}
             >
                 <MenuItem value="all">All Categories</MenuItem>
@@ -69,6 +60,7 @@ const CareTakerPendingProblems = ({ complaints }) => {
             </Select>
             <Select
                 value={filterSubCategoryType}
+                className='mr-10'
                 onChange={(e) => setFilterSubCategoryType(e.target.value)}
             >
                 <MenuItem value="all">All Subcategories</MenuItem>
@@ -81,25 +73,32 @@ const CareTakerPendingProblems = ({ complaints }) => {
                 <MenuItem value="other">Other</MenuItem>
             </Select>
             <Button onClick={handleDownloadExcel}>Download Excel</Button>
-            <List>
-                {filteredComplaints.map(complaint => (
-                    <ListItem key={complaint._id} className="list-item-container">
-                        <ListItemText
-                            primary={complaint.title}
-                            secondary={complaint.description}
-                        />
-                        <ListItemText
-                            primary={`Category: ${complaint.category.categoryType}`}
-                            secondary={`Sub-Category: ${complaint.category.subCategoryType}`}
-                        />
-                        <ListItemText
-                            primary={`Created By: ${complaint.createdBy.firstName} ${complaint.createdBy.lastName}`}
-                            secondary={`Reg No: ${complaint.createdBy.regNo}, Room No: ${complaint.createdBy.roomNo}`}
-                        />
-                        
-                    </ListItem>
-                ))}
-            </List>
+            <Table className="table-container mt-10">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Title</TableCell>
+                        <TableCell>Description</TableCell>
+                        <TableCell>Category</TableCell>
+                        <TableCell>Sub-Category</TableCell>
+                        <TableCell>Created By</TableCell>
+                        <TableCell>Registration No</TableCell>
+                        <TableCell>Room No</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {filteredComplaints.map(complaint => (
+                        <TableRow key={complaint._id}>
+                            <TableCell>{complaint.title}</TableCell>
+                            <TableCell>{complaint.description}</TableCell>
+                            <TableCell>{complaint.category.categoryType}</TableCell>
+                            <TableCell>{complaint.category.subCategoryType}</TableCell>
+                            <TableCell>{`${complaint.createdBy.firstName} ${complaint.createdBy.lastName}`}</TableCell>
+                            <TableCell>{complaint.createdBy.regNo}</TableCell>
+                            <TableCell>{complaint.createdBy.roomNo}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
         </div>
     )
 }

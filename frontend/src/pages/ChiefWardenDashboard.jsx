@@ -40,7 +40,7 @@ const ChiefWardenDashboard = () => {
     }, []); 
 
     return (
-        <div style={{ width: "90%", margin: "0 auto" }}>
+        <div className="text-4xl mt-5 mb-5">
           <ChiefWardenPendingProblems complaints = {complaints} setComplaints = {setComplaints} />
         </div>
     );
