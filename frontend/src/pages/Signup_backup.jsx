@@ -1,230 +1,4 @@
 
-// import React, { useContext, useState } from "react";
-// import axios from "axios";
-
-// import CircularProgress from "@mui/material/CircularProgress";
-// import TextField from "@mui/material/TextField";
-// import Button from "@mui/material/Button";
-// import IconButton from "@mui/material/IconButton";
-// import InputAdornment from "@mui/material/InputAdornment";
-// import VisibilityIcon from "@mui/icons-material/Visibility";
-// import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-// import Grid from "@mui/material/Grid";
-// import Paper from "@mui/material/Paper";
-// import toast from "react-hot-toast";
-// import { Link, Navigate, useNavigate} from "react-router-dom";
-// import { Context, server } from "../index.js";
-
-// const SignupPage = () => {
-//   const navigate = useNavigate();
-//   const {isAuthenticated,setIsAuthenticated} = useContext(Context);
-//   const [signupData, setSignupData] = useState({
-//     firstName: "",
-//     lastName: "",
-//     email: "",
-//     password: "",
-//   });
-
-//   const [showPassword, setShowPassword] = useState(false);
-//   const [otp, setOtp] = useState("");
-//   const [progress, setProgress] = useState(false);
-//   const [loading, setLoading] = useState(false);
-
-//   const handleTogglePasswordVisibility = () => {
-//     setShowPassword(!showPassword);
-//   };
-
-//   const handleChange = (event) => {
-//     setSignupData({
-//       ...signupData,
-//       [event.target.name]: event.target.value,
-//     });
-//   };
-
-//   const handleOtpChange = (event) => {
-//     setOtp(event.target.value);
-//   };
-
-//   const handleSubmit = async (event) => {
-//     event.preventDefault();
-//     // email validation
-//     const emailPattern = /^[a-zA-Z0-9._-]+@mnnit.ac.in$/;
-//     if (!emailPattern.test(signupData.email)) {
-//       toast.error("Please use a valid mnnit.ac.in email address.");
-//       return;
-//     }
-//     // password validation
-
-//     try {
-//       setLoading(true);
-//       const response = await axios.post(
-//         `${server}/sendOtp`,
-//         { email: signupData.email },
-//         { withCredentials: true }
-//       );
-//       toast.success(`Otp successfully send to your mail 📫`);
-//       console.log(response.data);
-//       setProgress(true);
-//     } catch (error) {
-//       toast.error(`Otp can't be send 📪`);
-//       console.error("Error sending OTP:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleOtpSubmit = async (event) => {
-//     event.preventDefault();
-//     try {
-//       setLoading(true);
-//       const response = await axios.post(
-//         `${server}/signup`,
-//         { ...signupData, otp },
-//         { withCredentials: true }
-//       );
-//       console.log(response.data);
-//       toast.success(`OTP verified `)
-//       toast.success('Navigating to Login')
-//       navigate('/login');
-//     } catch (error) {
-//       toast.error(`invalid Otp ⛔ `);
-//       console.error("Error verifying OTP:", error);
-//     } finally {
-//       setLoading(false); 
-//     }
-//   };
-
-//   return (
-//     <Grid container justifyContent="center" alignItems="center">
-//       <Grid item xs={12} sm={8} md={6} lg={4}>
-//         <Paper
-//           elevation={3}
-//           style={{ padding: "20px", borderRadius: "10px", textAlign: "center" }}
-//         >
-//           <h1>Signup Page</h1>
-//           {loading && (
-//             <CircularProgress size={100} />
-//           )}
-//           {!loading && !progress && (
-//             <form onSubmit={handleSubmit}>
-//               <TextField
-//                 label="First Name"
-//                 variant="outlined"
-//                 name="firstName"
-//                 value={signupData.firstName}
-//                 onChange={handleChange}
-//                 fullWidth
-//                 margin="normal"
-//               />
-//               <TextField
-//                 label="Last Name"
-//                 variant="outlined"
-//                 name="lastName"
-//                 value={signupData.lastName}
-//                 onChange={handleChange}
-//                 fullWidth
-//                 margin="normal"
-//               />
-//               <TextField
-//                 label="Email"
-//                 variant="outlined"
-//                 type="email"
-//                 name="email"
-//                 value={signupData.email}
-//                 onChange={handleChange}
-//                 fullWidth
-//                 margin="normal"
-//               />
-//               <TextField
-//                 label="Password"
-//                 variant="outlined"
-//                 type={showPassword ? "text" : "password"}
-//                 name="password"
-//                 value={signupData.password}
-//                 onChange={handleChange}
-//                 fullWidth
-//                 margin="normal"
-//                 InputProps={{
-//                   endAdornment: (
-//                     <InputAdornment position="end">
-//                       <IconButton
-//                         edge="end"
-//                         onClick={handleTogglePasswordVisibility}
-//                       >
-//                         {showPassword ? (
-//                           <VisibilityIcon />
-//                         ) : (
-//                           <VisibilityOffIcon />
-//                         )}
-//                       </IconButton>
-//                     </InputAdornment>
-//                   ),
-//                 }}
-//               />
-//               <Button
-//                 type="submit"
-//                 variant="contained"
-//                 color="primary"
-//                 fullWidth
-//                 style={{ marginTop: "10px" }}
-//               >
-//                 `Sign Up`
-//               </Button>
-//             </form>
-//           )}
-//           { !loading && progress && (
-//             <form onSubmit={handleOtpSubmit}>
-//               <TextField
-//                 label="Enter OTP"
-//                 variant="outlined"
-//                 type="number"
-//                 name="otp"
-//                 value={otp}
-//                 onChange={handleOtpChange}
-//                 fullWidth
-//                 margin="normal"
-//                 inputProps={{
-//                   inputMode: 'numeric',
-//                   pattern: '[0-9]{6}'
-//                 }}
-//               />
-//               <Button
-//                 type="submit"
-//                 variant="contained"
-//                 color="primary"
-//                 fullWidth
-//                 style={{ marginTop: "10px" }}
-//               >
-//                 `Verify OTP`
-//               </Button>
-//             </form>
-//           )}
-//            {!isAuthenticated && (
-//             <h4 style={{ margin: "20px", fontSize: "16px", color: "black" }}>
-//               Already Signed Up ? Login here
-//             </h4>
-//           )}
-
-//           {/* Login button */}
-//           <Button
-//             variant="outlined"
-//             color="primary"
-//             fullWidth
-//             style={{ marginTop: "10px" }}
-//             component={Link} 
-//             to="/login"
-//           >
-//             Log in here
-//           </Button>
-//         </Paper>
-//       </Grid>
-//     </Grid>
-//   );
-// };
-
-// export default SignupPage;
-
-
 import React, { useContext, useState } from "react";
 import axios from "axios";
 
@@ -327,7 +101,7 @@ const Signup = () => {
     
     <section class="bg-white h-10">
     <div class="lg:grid lg:min-h-auto lg:grid-cols-12">
-      <aside class="relative block h-16  mt-3 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
+      <aside class="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
         <img
           alt=""
           src="https://images.unsplash.com/photo-1605106702734-205df224ecce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
@@ -339,7 +113,7 @@ const Signup = () => {
         class="flex items-center justify-center px-8 py-1 sm:px-12 lg:col-span-7 lg:px-16 lg:py-0 xl:col-span-6"
       >
         <div class="max-w-xl lg:max-w-3xl">
-          <a class="block text-blue-600" href="/">
+          <a class="block text-blue-600" href="#">
             <span class="sr-only">Home</span>
             <svg
               class="h-8 sm:h-10"
@@ -359,7 +133,8 @@ const Signup = () => {
           </h1>
   
           <p class="mt-4 leading-relaxed text-gray-500">
-          Create an account to submit your complaints and track their status.
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam dolorum aliquam,
+            quibusdam aperiam voluptatum.
           </p>
           {!loading && !progress && (
           <form  onSubmit={handleSubmit} class="mt-8 grid grid-cols-6 gap-6">
@@ -449,31 +224,31 @@ const Signup = () => {
               />
             </div>
   
-            <div class="col-span-6 mt-5">
+            <div class="col-span-6">
               <label for="MarketingAccept" class="flex gap-4">
                 <input
                   type="checkbox"
                   id="MarketingAccept"
                   name="marketing_accept"
-                  class="size-5  h-5 rounded-md border-gray-200 bg-white shadow-sm"
+                  class="size-5  h-8 rounded-md border-gray-200 bg-white shadow-sm"
                 />
   
                 <span class="text-sm text-gray-700">
-                I agree to receive an OTP email at the provided email address.
+                  I want to receive emails about events, product updates and company announcements.
                 </span>
               </label>
             </div>
   
-            {/* <div class="col-span-6">
+            <div class="col-span-6">
               <p class="text-sm text-gray-500">
                 By creating an account, you agree to our
-                <a href="#" class="text-gray-700"> terms and conditions </a>
+                <a href="#" class="text-gray-700 underline"> terms and conditions </a>
                 and
-                <a href="#" class="text-gray-700 "> privacy policy</a>.
+                <a href="#" class="text-gray-700 underline">privacy policy</a>.
               </p>
-            </div> */}
+            </div>
   
-            <div class="col-span-6  mt-3 sm:flex sm:items-center sm:gap-4">
+            <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
               <button
                type="submit"
                 class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
@@ -483,38 +258,11 @@ const Signup = () => {
                 
               <p class="mt-4 text-sm text-gray-500 sm:mt-0">
                 Already have an account?
-                <a href="/login" class="text-gray-700">  Log in</a>.
+                <a href="#" class="text-gray-700 underline">Log in</a>.
               </p>
             </div>
           </form>
         )}
-        { !loading && progress && (
-            <form onSubmit={handleOtpSubmit}>
-              <TextField
-                label="Enter OTP"
-                variant="outlined"
-                type="number"
-                name="otp"
-                value={otp}
-                onChange={handleOtpChange}
-                fullWidth
-                margin="normal"
-                inputProps={{
-                  inputMode: 'numeric',
-                  pattern: '[0-9]{6}'
-                }}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                style={{ marginTop: "10px" }}
-              >
-                `Verify OTP`
-              </Button>
-            </form>
-          )}
         </div>
       </main>
     </div>

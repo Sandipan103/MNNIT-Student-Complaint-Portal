@@ -198,7 +198,7 @@ const Profile = () => {
             className=" d-flex   justify-content-center row-cols-1 h-100"
           >
             <MDBCard className="mb-4  h-100">
-              <MDBCardBody className="text-center  h-100">
+              <MDBCardBody className="text-center  h-100 ">
                 <MDBCardImage
                   src={
                     userData?.image ||
@@ -206,7 +206,7 @@ const Profile = () => {
                   }
                   alt="avatar"
                   className="rounded-circle"
-                  style={{ width: "150px" }}
+                  style={{ width: "150px", marginLeft:"100px"}}
                   fluid
                 />
                 <p className="text-muted mb-1">
@@ -264,7 +264,7 @@ const Profile = () => {
                       <TextField
                         name="firstName"
                         label="Name"
-                        value={editedData.firstName || ""}
+                        value={`${editedData.firstName || ''}`}
                         onChange={handleChange}
                         style={{ backgroundColor: "white", color: "black" }}
                       />
