@@ -10,6 +10,9 @@ import WardenPendingProblems from "../component/WardenPendingProblem"
 const WardenDashboard = () => {
     const [complaints, setComplaints] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    // send mail to caretaker that some problem is not solved now
+
     useEffect(() => {
         const fetchComplaints = async () => {
             const token = Cookies.get('tokenwf');

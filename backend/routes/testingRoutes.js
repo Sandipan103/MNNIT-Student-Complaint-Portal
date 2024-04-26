@@ -18,7 +18,7 @@ const {getUserProfileById, updateUserProfileById} = require('../controller/Profi
 
 
 // complaint controller
-const {createPersonalComplaint, getMyComplaints, getCommonComplaint, markOngoing, markSolved} = require('../controller/Complaint');
+const {createPersonalComplaint, getMyComplaints, getCommonComplaint, markOngoing, markSolved, rejectComplaint} = require('../controller/Complaint');
 
 
 //careTaker controller
@@ -36,6 +36,8 @@ const {loginChiefWarden,chiefWarden,createChiefWarden} = require("../controller/
 
 // fileUpload controller
 const {imageUpload, } = require('../controller/fileUpload')
+
+
 // other controller
 
 
@@ -58,6 +60,7 @@ router.get('/getMyComplaints/:userId', getMyComplaints);
 router.get('/getCommonComplaint/:userId', getCommonComplaint);
 router.post('/markOngoing', markOngoing);
 router.post('/markSolved', markSolved);
+router.post('/rejectComplaint', rejectComplaint);
 
 
 

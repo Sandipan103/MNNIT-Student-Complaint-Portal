@@ -6,6 +6,9 @@ const Caretaker = require("../models/CaretakerModel");
 const Warden = require("../models/WardenModel")
 const ChiefWarden = require("../models/ChiefWardenModel")
 
+// required for sending mail for verification otp to user mail id 
+const mailSender = require("../utils/mailsender");
+
 // dependency required
 require("dotenv").config();
 
@@ -270,6 +273,72 @@ exports.markSolved = async (req, res) => {
     return res.status(401).json({
       success: false,
       message: `complaint not marked as solved`,
+    });
+  }
+};
+
+
+const sendVerificationMail = async (email, complaint) => {
+  try {
+    const title = "Complaint rejected";
+    const body = `
+    <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center;">
+      <h1 style="color: #4CAF50; font-size: 28px; margin-bottom: 20px;">MNNIT Complaint Portal</h1>
+      <p style="color: #555; font-size: 16px; margin-bottom: 20px;">${complaint}</p>
+      <p style="color: #888; font-size: 14px; margin-top: 20px;">MNNIT Complaint Portal Team</p>
+    </div>
+    `;
+
+    const mailResponse = await mailSender(email, title, body);
+    // console.log(`otp send successfully `, mailResponse);
+  } catch (error) {
+    console.log("otp sending error", error);
+    throw error;
+  }
+};
+
+exports.rejectComplaint = async (req, res) => {
+  try {
+    const { complaintId, } = req.body;
+
+    const complaint = await Complaint.findByIdAndUpdate(
+      complaintId,
+      { currentStatus: 'rejected' },
+      { new: true }
+    );
+
+    if (!complaint) {
+      return res.status(404).json({
+        success: false,
+        message: `complaint not found`,
+      });
+    }
+
+    const user = await User.findById(complaint.createdBy);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: `User not found for the complaint`,
+      });
+    }
+
+    user.pendingComplaints.pull(complaintId);
+    await user.save();
+
+    const mailResp = await sendVerificationMail(user.email, complaint);
+
+    res.status(200).json({
+      success: true,
+      message: `complaint marked as rejected successfully`,
+      complaint,
+      mailResp,
+    });
+  } catch (error) {
+    console.log("error occured while marking complaint as rejected : ", error);
+    return res.status(401).json({
+      success: false,
+      message: `complaint not marked as rejected`,
     });
   }
 };
