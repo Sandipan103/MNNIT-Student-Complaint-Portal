@@ -39,6 +39,29 @@ const CareTakerPendingProblems = ({ complaints, setComplaints }) => {
         }
     }
 
+    const handleReject = async(complaintId) => {
+        // send a mail to the user that complaint rejected
+        try {
+            const response = await axios.post(
+                `${server}/rejectComplaint`,
+                { complaintId: complaintId }
+            );
+            const pendingComplaintIndex = complaints.pending.findIndex(complaint => complaint._id === complaintId);
+            if (pendingComplaintIndex !== -1) {
+                const pendingComplaint = complaints.pending[pendingComplaintIndex];
+                const updatedPendingComplaints = [...complaints.pending.slice(0, pendingComplaintIndex), ...complaints.pending.slice(pendingComplaintIndex + 1)];
+                setComplaints(prevState => ({
+                    ...prevState,
+                    pending: updatedPendingComplaints
+                }));
+            }
+            toast.success('Complaint rejected');
+        } catch (error) {
+            toast.error('Something went wrong');
+            console.error('error while rejecting complaint : ', error);
+        }
+    }
+
     const filteredComplaints = complaints.pending.filter(complaint => {
         const titleMatch = complaint.title.toLowerCase().includes(searchTerm.toLowerCase());
         const categoryTypeMatch = !filterCategoryType || filterCategoryType === 'all' || complaint.category.categoryType === filterCategoryType;
@@ -126,6 +149,7 @@ const CareTakerPendingProblems = ({ complaints, setComplaints }) => {
                 <TableCell>{complaint.createdBy.roomNo}</TableCell>
                 <TableCell className="button-container">
                     <Button onClick={() => handleSeenClick(complaint._id)}>Seen</Button>
+                    <Button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => handleReject(complaint._id)}>Reject</Button>
                 </TableCell>
             </TableRow>
         ))}
