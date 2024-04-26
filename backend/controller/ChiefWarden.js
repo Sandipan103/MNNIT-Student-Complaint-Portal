@@ -20,6 +20,7 @@ exports.chiefWarden = async (req, res) => {
   console.log("tokencw : ",req)
   // if(token){
     try {
+      const hostels = await Hostel.find();
       // Calculate the date three days ago
       const threeDaysAgo = new Date();
       threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
@@ -29,11 +30,11 @@ exports.chiefWarden = async (req, res) => {
         //   warden: userId, 
           // createdAt: { $lte: threeDaysAgo },
           currentStatus: 'pending'
-      }).populate('createdBy', '-password');
+      }).populate('createdBy', '-password').populate('hostel', 'name');;
 
       // Send the complaints as a response 
       // console.log(complaints); 
-      res.json({ complaints });
+      res.json({ complaints ,hostels});
       console.log("complaint sent from chief warden")
   } catch (error) {  
       // Handle errors 

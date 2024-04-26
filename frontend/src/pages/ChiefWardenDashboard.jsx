@@ -1,49 +1,70 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { Context, server } from "../index";
 import toast from "react-hot-toast";
-import { Typography, Input, Select, MenuItem, List, ListItem, ListItemText, ListItemSecondaryAction, Button,CircularProgress, Tabs, Tab, } from "@mui/material";
-import ChiefWardenPendingProblems from "../component/ChiefWardenPendingProblems"
+import { Button, CircularProgress } from "@mui/material";
+import ChiefWardenPendingProblems from "../component/ChiefWardenPendingProblems";
 const ChiefWardenDashboard = () => {
-    const [complaints, setComplaints] = useState([]);
-    const [loading, setLoading] = useState(false);
-    useEffect(() => {
-        const fetchComplaints = async () => {
-            // const token = Cookies.get('tokencwf');
-            // if(token){
-                try {
-                    setLoading(true);
-                    // const decodedToken = jwtDecode(token);
-                    // console.log("decodid",decodedToken.id)
-                    const response = await axios.get(`${server}/chiefWardenDashboard`);
-                    setComplaints(response.data.complaints);
-                    console.log(
-                        response.data.complaints
-                    );
-                    console.log(complaints)
-                    // setComplaints(data.data.complaints);
-                    
-                } catch (error) {
-                    console.error('Error fetching complaints:', error);
-                    // Handle error
-                } finally{
-                    setLoading(false);
-                }
-            // }
-            
-        };
+  const [complaints, setComplaints] = useState([]);
+  const [hostels, setHostels] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [filteredComplaints, setFilteredComplaints] = useState([]);
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${server}/chiefWardenDashboard`);
+        setComplaints(response.data.complaints);
+        setHostels(response.data.hostels);
+        // console.log(response.data.complaints);
+        // console.log(complaints);
+      } catch (error) {
+        console.error("Error fetching complaints:", error);
+        // Handle error
+      } finally {
+        setLoading(false);
+      }
+      // }
+    };
 
-        fetchComplaints();
-    }, []); 
+    fetchComplaints();
+  }, []);
 
-    return (
-        <div className="text-4xl mt-5 mb-5">
-          <ChiefWardenPendingProblems complaints = {complaints} setComplaints = {setComplaints} />
-        </div>
+  const handleHostelClick = (hostelId) => {
+    const filtered = complaints.filter(
+      (complaint) => complaint.hostel._id === hostelId
     );
+    setFilteredComplaints(filtered);
+  };
+
+  return (
+    <div className="text-4xl mt-5 mb-5">
+      <h1 className="ml-10">Hostel List</h1>
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <ul>
+          {hostels.map((hostel) => (
+            <li key={hostel._id}>
+              <Button
+                variant="outlined"
+                onClick={() => handleHostelClick(hostel._id)}
+              >
+                {hostel.name}
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <ChiefWardenPendingProblems
+        complaints={filteredComplaints}
+        setComplaints={setComplaints}
+      />
+    </div>
+  );
 };
 
 export default ChiefWardenDashboard;
