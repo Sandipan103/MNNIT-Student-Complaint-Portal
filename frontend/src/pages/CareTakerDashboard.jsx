@@ -9,6 +9,7 @@ import { Typography, Input, Select, MenuItem, List, ListItem, ListItemText, List
 import CareTakerPendingProblems from '../component/CareTakerPendingProblems';
 import CareTakerOngoingProblems from '../component/CareTakerOngoingProblems';
 import CareTakerSolvedProblems from '../component/CareTakerSolvedProblems';
+import StatisticView from '../component/StatisticView';
 
 const CareTakerDashboard = () => {
   const [complaints, setComplaints] = useState({
@@ -63,6 +64,7 @@ const CareTakerDashboard = () => {
         <Tab label="Pending" value="pending" />
         <Tab label="Ongoing" value="ongoing" />
         <Tab label="Solved" value="solved" />
+        <Tab label="StatView" value="statView" />
       </Tabs>
 
       <div style={{ width: "90%", margin: "0 auto" }}>
@@ -74,6 +76,9 @@ const CareTakerDashboard = () => {
         )}
         {currentTab === "solved" && (
           <CareTakerSolvedProblems complaints = {complaints} setComplaints = {setComplaints} />
+        )}
+        {currentTab === "statView" && (
+          <StatisticView complaints = {complaints} setComplaints = {setComplaints} setCurrentTab = {setCurrentTab} />
         )}
       </div>
     </div>
