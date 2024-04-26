@@ -41,9 +41,9 @@ function App() {
         toastOptions={{
           style: {
             right: 0,
-            top: "50%", // Position at the middle of the screen vertically
+            top: "100%", // Position at the middle of the screen vertically
             transform: "translateY(-50%)", // Adjust to center vertically
-            margin: "5px",
+            margin: "50px",
             maxWidth: "100%",
             width: "250px", // Adjust width as needed
           },
