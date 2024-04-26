@@ -106,8 +106,6 @@ exports.createPersonalComplaint = async (req, res) => {
   }
 };
 
-
-
 exports.getMyComplaints = async (req, res) => {
   const userId = req.params.userId;
   try {
@@ -142,9 +140,6 @@ exports.getMyComplaints = async (req, res) => {
     });
   }
 };
-
-
-
 
 exports.getCommonComplaint = async (req, res) => {
   try {
@@ -186,7 +181,6 @@ exports.getCommonComplaint = async (req, res) => {
     });
   }
 };
-
 
 exports.markOngoing = async (req, res) => {
   try {
@@ -231,7 +225,6 @@ exports.markOngoing = async (req, res) => {
     });
   }
 };
-
 
 exports.markSolved = async (req, res) => {
   try {
@@ -278,25 +271,6 @@ exports.markSolved = async (req, res) => {
 };
 
 
-const sendVerificationMail = async (email, complaint) => {
-  try {
-    const title = "Complaint rejected";
-    const body = `
-    <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center;">
-      <h1 style="color: #4CAF50; font-size: 28px; margin-bottom: 20px;">MNNIT Complaint Portal</h1>
-      <p style="color: #555; font-size: 16px; margin-bottom: 20px;">${complaint}</p>
-      <p style="color: #888; font-size: 14px; margin-top: 20px;">MNNIT Complaint Portal Team</p>
-    </div>
-    `;
-
-    const mailResponse = await mailSender(email, title, body);
-    // console.log(`otp send successfully `, mailResponse);
-  } catch (error) {
-    console.log("otp sending error", error);
-    throw error;
-  }
-};
-
 exports.rejectComplaint = async (req, res) => {
   try {
     const { complaintId, } = req.body;
@@ -325,15 +299,76 @@ exports.rejectComplaint = async (req, res) => {
 
     user.pendingComplaints.pull(complaintId);
     await user.save();
+    const title =  'Complaint Rejected: ' + complaint.title;
+    const body = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #cc0000;">Your Complaint Has Been Rejected</h2>
+      <p style="color: #666;">We regret to inform you that your complaint has been rejected by the authorities.</p>
+      <h3 style="color: #333;">Complaint Details:</h3>
+      <ul style="list-style-type: none; padding: 0;">
+        <li><strong>Category:</strong> ${complaint.category.categoryType}</li>
+        <li><strong>Subcategory:</strong> ${complaint.category.subCategoryType}</li>
+        <li><strong>Title:</strong> ${complaint.title}</li>
+        <li><strong>Description:</strong> ${complaint.description}</li>
+      </ul>
+      <p style="color: #666;">If you have any further inquiries, please contact the hostel management team.</p>
+    </div>
+  `;
 
-    const mailResp = await sendVerificationMail(user.email, complaint);
+    const mailResponse = await mailSender(user.email, title, body);
 
     res.status(200).json({
       success: true,
       message: `complaint marked as rejected successfully`,
-      complaint,
-      mailResp,
+      mailResponse,
     });
+  } catch (error) {
+    console.log("error occured while marking complaint as rejected : ", error);
+    return res.status(401).json({
+      success: false,
+      message: `complaint not marked as rejected`,
+    });
+  }
+};
+
+exports.sendMailToCaretaker = async (req, res) => {
+  try {
+    const { userId, } = req.body;
+
+    const warden = await Warden.findById(userId).populate('hostel');
+    const caretaker = await Caretaker.findById(warden.hostel.careTaker);
+    // console.log('caretaker : ', caretaker);
+    // const email = caretaker.email;
+    const email = 'shorya.2022ca099@mnnit.ac.in';
+    const title = 'Action Required: Pending Complaints'
+    const body = `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <h2 style="color: #333;">Attention ${caretaker.name},</h2>
+    <p style="color: #666;">This is a reminder to address pending complaints in your hostel.</p>
+    <p style="color: #666;">Please take necessary actions to resolve the following complaints:</p>
+    <ul style="list-style-type: none; padding: 0;">
+      <li style="margin-bottom: 10px;">
+        <strong>Complaint ID:</strong> #12345<br>
+        <strong>Description:</strong> Water leakage in the bathroom<br>
+        <strong>Status:</strong> Pending
+      </li>
+      <li style="margin-bottom: 10px;">
+        <strong>Complaint ID:</strong> #67890<br>
+        <strong>Description:</strong> Broken window in the common area<br>
+        <strong>Status:</strong> Pending
+      </li>
+    </ul>
+    <p style="color: #666;">Your prompt attention to these matters is greatly appreciated.</p>
+    <p style="color: #666;">Best regards,<br>Hostel Management Team</p>
+  </div>
+`;
+    const mailResponse = await mailSender(email, title, body);
+    console.log('mailResponse : ' , mailResponse)
+    return res.status(200).json({
+      success: true,
+      message: `mail send successfully`,
+      mailResponse
+    });
+    
   } catch (error) {
     console.log("error occured while marking complaint as rejected : ", error);
     return res.status(401).json({
