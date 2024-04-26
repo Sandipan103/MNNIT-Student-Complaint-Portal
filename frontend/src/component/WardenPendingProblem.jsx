@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Typography, Input, Select, MenuItem, Button, Table, TableHead, TableBody, TableRow, TableCell } from "@mui/material";
+import axios from "axios";
 import { Context, server } from "../index.js";
 import toast from "react-hot-toast";
 import * as XLSX from 'xlsx';
 import "../styles/CareTakerDashBoard.css";
 
-const CareTakerPendingProblems = ({ complaints }) => {
+const CareTakerPendingProblems = ({ complaints, setComplaints, userId }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterCategoryType, setFilterCategoryType] = useState('all');
     const [filterSubCategoryType, setFilterSubCategoryType] = useState('all');
@@ -37,6 +38,20 @@ const CareTakerPendingProblems = ({ complaints }) => {
         const ws = XLSX.utils.json_to_sheet(downloadComplaints);
         XLSX.utils.book_append_sheet(wb, ws, "Pending Complaints");
         XLSX.writeFile(wb, "pending_complaints.xlsx");
+    }
+
+    const sendMailToCaretaker = async() => {
+        // send a mail to the caretaker
+        try {
+            const response = await axios.post(
+                `${server}/sendMailToCaretaker`,
+                { userId: userId }
+            );
+            toast.success('mail send successfully');
+        } catch (error) {
+            toast.error('Something went wrong while sending mail to caretaker');
+            console.error('error while sending mail to caretaker : ', error);
+        }
     }
 
     return (
@@ -73,6 +88,7 @@ const CareTakerPendingProblems = ({ complaints }) => {
                 <MenuItem value="other">Other</MenuItem>
             </Select>
             <Button onClick={handleDownloadExcel}>Download Excel</Button>
+            <Button onClick={sendMailToCaretaker}> Send Mail </Button>
             <Table className="table-container mt-10">
                 <TableHead>
                     <TableRow>

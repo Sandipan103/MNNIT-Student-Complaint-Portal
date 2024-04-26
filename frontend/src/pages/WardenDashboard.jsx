@@ -10,6 +10,7 @@ import WardenPendingProblems from "../component/WardenPendingProblem"
 const WardenDashboard = () => {
     const [complaints, setComplaints] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [userId, setuserId] = useState()
 
     // send mail to caretaker that some problem is not solved now
 
@@ -21,6 +22,7 @@ const WardenDashboard = () => {
                     setLoading(true);
                     const decodedToken = jwtDecode(token);
                     console.log("decodid",decodedToken.id)
+                    setuserId(decodedToken.id)
                     const response = await axios.get(`${server}/wardenDashboard/${decodedToken.id}`);
                     setComplaints(response.data.complaints);
                     console.log(
@@ -44,7 +46,7 @@ const WardenDashboard = () => {
 
     return (
         <div  className="text-4xl mt-5 mb-5">
-          <WardenPendingProblems complaints = {complaints} setComplaints = {setComplaints} />
+          <WardenPendingProblems complaints = {complaints} setComplaints = {setComplaints}  userId = {userId} />
         </div>
     );
 };
