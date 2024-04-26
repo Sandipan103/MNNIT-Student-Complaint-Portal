@@ -52,7 +52,6 @@ const CareTakerPendingProblems = ({ complaints }) => {
 
     return (
         <div>
-            <h2 className='text-4xl ml-5'>Chief Warden Pending Problems</h2>
             <Input
                 type="text"
                 placeholder="Search by title..."

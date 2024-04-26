@@ -12,6 +12,7 @@ const ChiefWardenDashboard = () => {
   const [hostels, setHostels] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filteredComplaints, setFilteredComplaints] = useState([]);
+  const [selectedHostel, setSelectedHostel] = useState(null);
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
@@ -33,25 +34,26 @@ const ChiefWardenDashboard = () => {
     fetchComplaints();
   }, []);
 
-  const handleHostelClick = (hostelId) => {
+  const handleHostelClick = (hostelId, hostelName) => {
     const filtered = complaints.filter(
       (complaint) => complaint.hostel._id === hostelId
     );
     setFilteredComplaints(filtered);
+    setSelectedHostel(hostelName);
   };
 
   return (
     <div className="text-4xl mt-5 mb-5">
-      <h1 className="ml-10">Hostel List</h1>
+      <h1 className="ml-8">Hostels List</h1>
       {loading ? (
         <CircularProgress />
       ) : (
-        <ul>
+        <ul className="flex flex-wrap gap-4 mt-4">
           {hostels.map((hostel) => (
             <li key={hostel._id}>
               <Button
                 variant="outlined"
-                onClick={() => handleHostelClick(hostel._id)}
+                onClick={() => handleHostelClick(hostel._id, hostel.name)}
               >
                 {hostel.name}
               </Button>
@@ -59,6 +61,9 @@ const ChiefWardenDashboard = () => {
           ))}
         </ul>
       )}
+      <h1 className=" mt-2 ml-8">
+        {selectedHostel ? ` ${selectedHostel} Complaints` : "Select a Hostel "}
+      </h1>
       <ChiefWardenPendingProblems
         complaints={filteredComplaints}
         setComplaints={setComplaints}
