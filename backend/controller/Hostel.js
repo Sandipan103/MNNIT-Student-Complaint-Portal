@@ -26,7 +26,7 @@ exports.createHostel = async (req, res) => {
 
         // Create a new hostel with wings
         const newHostel = await Hostel.create({ name: hostelName, wings : wings });
-        console.log("wings : ", wings)
+        // console.log("wings : ", wings)
 
         return res.status(201).json({
             success: true,
