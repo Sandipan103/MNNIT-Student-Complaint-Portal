@@ -347,13 +347,18 @@ exports.sendMailToCaretaker = async (req, res) => {
     <p style="color: #666;">Please take necessary actions to resolve the following complaints:</p>
     <ul style="list-style-type: none; padding: 0;">
       <li style="margin-bottom: 10px;">
-        <strong>Complaint ID:</strong> #12345<br>
-        <strong>Description:</strong> Water leakage in the bathroom<br>
+        <strong>Complaint ID:</strong> #984322578343<br>
+        <strong>Description:</strong> Fan is not working<br>
         <strong>Status:</strong> Pending
       </li>
       <li style="margin-bottom: 10px;">
-        <strong>Complaint ID:</strong> #67890<br>
-        <strong>Description:</strong> Broken window in the common area<br>
+        <strong>Complaint ID:</strong> #562197213214<br>
+        <strong>Description:</strong> door broken <br>
+        <strong>Status:</strong> Pending
+      </li>
+      <li style="margin-bottom: 10px;">
+        <strong>Complaint ID:</strong> #3985459177373<br>
+        <strong>Description:</strong> Window is broken <br>
         <strong>Status:</strong> Pending
       </li>
     </ul>
@@ -371,6 +376,90 @@ exports.sendMailToCaretaker = async (req, res) => {
     
   } catch (error) {
     console.log("error occured while marking complaint as rejected : ", error);
+    return res.status(401).json({
+      success: false,
+      message: `complaint not marked as rejected`,
+    });
+  }
+};
+
+exports.sendMailFromChiefWarden = async (req, res) => {
+  try {
+    const { selectedHostel, } = req.body;
+    const hostel = await Hostel.findOne({ name: selectedHostel }).populate('careTaker').populate('warden');
+
+    // console.log('hostel : ', hostel);
+    // console.log('caretaker : ', hostel.careTaker.name);
+    // console.log('warden : ', hostel.warden.name);
+    // const email = caretaker.email;
+    const email = 'shorya.2022ca099@mnnit.ac.in';
+    const title = 'Action Required: Pending Complaints'
+    const body = `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #333;">Attention ${hostel.careTaker.name},</h2>
+        <p style="color: #666;">This is a reminder to address pending complaints in your hostel.</p>
+        <p style="color: #666;">Please take necessary actions to resolve the following complaints:</p>
+        <ul style="list-style-type: none; padding: 0;">
+          <li style="margin-bottom: 10px;">
+            <strong>Complaint ID:</strong> #984322578343<br>
+            <strong>Description:</strong> Fan is not working<br>
+            <strong>Status:</strong> Pending
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>Complaint ID:</strong> #562197213214<br>
+            <strong>Description:</strong> door broken <br>
+            <strong>Status:</strong> Pending
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>Complaint ID:</strong> #3985459177373<br>
+            <strong>Description:</strong> Window is broken <br>
+            <strong>Status:</strong> Pending
+          </li>
+        </ul>
+        <p style="color: #666;">Your prompt attention to these matters is greatly appreciated.</p>
+        <p style="color: #666;">Best regards,<br>Hostel Management Team</p>
+      </div>
+    `;
+    const mailResponse = await mailSender(email, title, body);
+    // console.log('mailResponse : ' , mailResponse)
+
+    const email2 = 'sandipan.2022ca092@mnnit.ac.in';
+    const title2 = 'Action Required: Pending Complaints'
+    const body2 = `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #333;">Attention ${hostel.warden.name},</h2>
+        <p style="color: #666;">This is a reminder to address pending complaints in your hostel.</p>
+        <p style="color: #666;">Please take necessary actions to resolve the following complaints:</p>
+        <ul style="list-style-type: none; padding: 0;">
+          <li style="margin-bottom: 10px;">
+            <strong>Complaint ID:</strong> #984322578343<br>
+            <strong>Description:</strong> Fan is not working<br>
+            <strong>Status:</strong> Pending
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>Complaint ID:</strong> #562197213214<br>
+            <strong>Description:</strong> door broken <br>
+            <strong>Status:</strong> Pending
+          </li>
+          <li style="margin-bottom: 10px;">
+            <strong>Complaint ID:</strong> #3985459177373<br>
+            <strong>Description:</strong> Window is broken <br>
+            <strong>Status:</strong> Pending
+          </li>
+        </ul>
+        <p style="color: #666;">Your prompt attention to these matters is greatly appreciated.</p>
+        <p style="color: #666;">Best regards,<br>Hostel Management Team</p>
+      </div>
+    `;
+    const mailResponse2 = await mailSender(email2, title2, body2);
+
+    return res.status(200).json({
+      success: true,
+      message: `mail send successfully`,
+      mailResponse,
+      mailResponse2,
+    });
+    
+  } catch (error) {
+    console.log("error occured while sending mail : ", error);
     return res.status(401).json({
       success: false,
       message: `complaint not marked as rejected`,

@@ -46,35 +46,35 @@ const Feed = () => {
     }
   };
 
-  const handleUpvote = async (complaintId) => {
-    try {
-      const token = Cookies.get("tokenf");
-      if (!token) {
-        toast.error("Please login first");
-        return;
-      }
-      const decodedToken = jwtDecode(token);
-      const { id: userId } = decodedToken;
+  // const handleUpvote = async (complaintId) => {
+  //   try {
+  //     const token = Cookies.get("tokenf");
+  //     if (!token) {
+  //       toast.error("Please login first");
+  //       return;
+  //     }
+  //     const decodedToken = jwtDecode(token);
+  //     const { id: userId } = decodedToken;
 
-      if (userUpvotedComplaints.includes(complaintId)) {
-        await axios.post(`${server}/downvoteComplaint/${userId}`, {
-          complaintId,
-        });
-      } else {
-        await axios.post(`${server}/upvoteComplaint/${userId}`, {
-          complaintId,
-        });
-      }
+  //     if (userUpvotedComplaints.includes(complaintId)) {
+  //       await axios.post(`${server}/downvoteComplaint/${userId}`, {
+  //         complaintId,
+  //       });
+  //     } else {
+  //       await axios.post(`${server}/upvoteComplaint/${userId}`, {
+  //         complaintId,
+  //       });
+  //     }
 
-      fetchCommonComplaints();
-    } catch (error) {
-      console.error("Error upvoting/downvoting complaint:", error);
-    }
-  };
+  //     fetchCommonComplaints();
+  //   } catch (error) {
+  //     console.error("Error upvoting/downvoting complaint:", error);
+  //   }
+  // };
 
-  const handleComment = (complaintId, comment) => {
-    // Implement comment functionality here
-  };
+  // const handleComment = (complaintId, comment) => {
+  //   // Implement comment functionality here
+  // };
 
   return (
     <div style={{ padding: "20px" }}>
@@ -115,7 +115,7 @@ const Feed = () => {
                 >
                   {complaint.description}
                 </Typography>
-                <div
+                {/* <div
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -141,9 +141,9 @@ const Feed = () => {
                   >
                     Comment
                   </Button>
-                </div>
+                </div> */}
               </CardContent>
-              <div style={{ padding: "8px" }}>
+              {/* <div style={{ padding: "8px" }}>
                 <TextField
                   // label="Filled"
                   id={`comment-${complaint._id}`}
@@ -166,7 +166,7 @@ const Feed = () => {
                     }
                   }}
                 />
-              </div>
+              </div> */}
             </Card>
           </Grid>
         ))}
