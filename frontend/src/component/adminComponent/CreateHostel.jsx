@@ -1,8 +1,21 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, Paper, Typography } from '@mui/material';
 import { Context, server } from "../../index";
 import axios from 'axios';
 import toast from "react-hot-toast";
+
+const styles = {
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100vh',
+  },
+  paper: {
+    padding: '20px',
+    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+  },
+};
 
 const CreateHostel = () => {
   const [hostelName, setHostelName] = useState('');
@@ -53,54 +66,67 @@ const CreateHostel = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="Hostel Name"
-        variant="outlined"
-        value={hostelName}
-        onChange={(e) => setHostelName(e.target.value)}
-        fullWidth
-        required
-      />
-      {wings.map((wing, wingIndex) => (
-        <Box key={wingIndex}>
+    <div style={styles.root}>
+      <Paper style={styles.paper}>
+        <Typography variant="h5" component="h2" gutterBottom>
+          Create Hostel
+        </Typography>
+        <form onSubmit={handleSubmit}>
           <TextField
-            label="Wing Number"
+            label="Hostel Name"
             variant="outlined"
-            value={wing.wingNo}
-            onChange={(e) => handleWingChange(wingIndex, 'wingNo', e.target.value)}
+            value={hostelName}
+            onChange={(e) => setHostelName(e.target.value)}
             fullWidth
+            required
+            className="mt-3"
           />
-          <Box>
-            <TextField
-              label="Start Room Number"
-              variant="outlined"
-              value={wing.startRoom}
-              onChange={(e) => handleRoomRangeChange(wingIndex, 'startRoom', e.target.value)}
-              fullWidth
-              style={{ marginRight: '10px' }}
-            />
-            <TextField
-              label="End Room Number"
-              variant="outlined"
-              value={wing.endRoom}
-              onChange={(e) => handleRoomRangeChange(wingIndex, 'endRoom', e.target.value)}
-              fullWidth
-              style={{ marginRight: '10px' }}
-            />
-            <Button variant="contained" onClick={() => handleAddRoomRange(wingIndex)}>
-              Add Room Range
+          {wings.map((wing, wingIndex) => (
+            <Box key={wingIndex} mt={2}>
+              <TextField
+                label="Wing Number"
+                variant="outlined"
+                value={wing.wingNo}
+                onChange={(e) => handleWingChange(wingIndex, 'wingNo', e.target.value)}
+                fullWidth
+                className="mt-3"
+              />
+              <Box mt={2}>
+                <TextField
+                  label="Start Room Number"
+                  variant="outlined"
+                  value={wing.startRoom}
+                  onChange={(e) => handleRoomRangeChange(wingIndex, 'startRoom', e.target.value)}
+                  fullWidth
+                  style={{ marginRight: '10px' }}
+                  className="mt-3"
+                />
+                <TextField
+                  label="End Room Number"
+                  variant="outlined"
+                  value={wing.endRoom}
+                  onChange={(e) => handleRoomRangeChange(wingIndex, 'endRoom', e.target.value)}
+                  fullWidth
+                  style={{ marginRight: '10px' }}
+                  className="mt-3"
+                />
+                <Button variant="contained" onClick={() => handleAddRoomRange(wingIndex)} className="mt-3">
+                  Add Room Range
+                </Button>
+              </Box>
+            </Box>
+          ))}
+          <Box mt={2}>
+            <Button variant="contained" onClick={handleAddWing} className="mt-3">
+              Add Wing
+            </Button>
+            <Button type="submit" variant="contained" color="primary" style={{ marginLeft: '10px' }} className="mt-3">
+              Create Hostel
             </Button>
           </Box>
-        </Box>
-      ))}
-      <Button variant="contained" onClick={handleAddWing}>
-        Add Wing
-      </Button>
-      <Button type="submit" variant="contained" color="primary">
-        Create Hostel
-      </Button>
-    </form>
+        </form>
+      </Paper>
+    </div>
   );
 };
 

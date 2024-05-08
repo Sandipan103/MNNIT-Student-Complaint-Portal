@@ -67,6 +67,7 @@ const ChiefWardenDashboard = () => {
       <ChiefWardenPendingProblems
         complaints={filteredComplaints}
         setComplaints={setComplaints}
+        selectedHostel = {selectedHostel}
       />
     </div>
   );

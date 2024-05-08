@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Paper } from '@mui/material';
 import { Context, server } from "../../index";
 import axios from 'axios';
 import toast from "react-hot-toast";
@@ -36,52 +36,72 @@ const CreateWarden = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="Name"
-        variant="outlined"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        fullWidth
-        required
-      />
-      <TextField
-        label="Contact Number"
-        variant="outlined"
-        value={contactNo}
-        onChange={(e) => setContactNo(e.target.value)}
-        fullWidth
-      />
-      <TextField
-        label="Email"
-        variant="outlined"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        fullWidth
-        required
-      />
-      <TextField
-        label="Password"
-        variant="outlined"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        fullWidth
-        required
-      />
-      <TextField
-        label="Hostel Name"
-        variant="outlined"
-        value={hostelName}
-        onChange={(e) => setHostelName(e.target.value)}
-        fullWidth
-        required
-      />
-      <Button type="submit" variant="contained" color="primary">
-        Create Warden
-      </Button>
-    </form>
+    <Paper 
+      elevation={3} 
+      style={{
+        padding: '20px',
+        maxWidth: '400px',
+        margin: 'auto',
+        marginTop: '50px',
+        transition: 'transform 0.3s',
+        '&:hover': {
+          transform: 'scale(1.05)',
+        },
+      }}
+    >
+      <h1> Create Warden </h1>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Name"
+          variant="outlined"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          fullWidth
+          required
+          className="mt-3"
+        />
+        <TextField
+          label="Contact Number"
+          variant="outlined"
+          value={contactNo}
+          onChange={(e) => setContactNo(e.target.value)}
+          fullWidth
+          className="mt-3"
+        />
+        <TextField
+          label="Email"
+          variant="outlined"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+          required
+          className="mt-3"
+        />
+        <TextField
+          label="Password"
+          variant="outlined"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          fullWidth
+          required
+          className="mt-3"
+        />
+        <TextField
+          label="Hostel Name"
+          variant="outlined"
+          value={hostelName}
+          onChange={(e) => setHostelName(e.target.value)}
+          fullWidth
+          required
+          className="mt-3"
+        />
+        <Button type="submit" variant="contained" color="primary"  className="mt-3">
+          Create Warden
+        </Button>
+      </form>
+    </Paper>
   );
 };
 

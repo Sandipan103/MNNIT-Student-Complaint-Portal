@@ -15,9 +15,7 @@ import CareTakerDashboard from "./pages/CareTakerDashboard";
 import LoginWarden from "./pages/LoginWarden";
 import LoginChiefWarden from "./pages/LoginChiefWarden";
 import ChiefWardenDashboard from "./pages/ChiefWardenDashboard";
-import CreateHostel from "./component/adminComponent/CreateHostel";
-import CreateCareTaker from "./component/adminComponent/CreateCareTaker";
-import CreateWarden from "./component/adminComponent/CreateWarden";
+import AdminPage from "./pages/AdminPage";
 function App() {
   return (
     <div>
@@ -39,9 +37,7 @@ function App() {
           <Route path="/careTakerDashBoard" element={<CareTakerDashboard />} />
 
           {/* admin controll */}
-          <Route path="/createHostel" element={<CreateHostel />} />
-          <Route path="/createCareTaker" element={<CreateCareTaker />} />
-          <Route path="/createWarden" element={<CreateWarden />} />
+          <Route path="/adminPage" element={<AdminPage />} />
         </Routes>
       </Router>
        <Toaster
