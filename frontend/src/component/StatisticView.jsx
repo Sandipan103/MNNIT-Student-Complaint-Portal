@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart } from '@mui/x-charts/PieChart';
+import { PieChart } from '@mui/x-charts';
 
 const StatisticView = ({ complaints, setCurrentTab }) => {
 

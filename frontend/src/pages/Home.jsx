@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import BannerImage from "./complaint.png"; // Import your banner image
+import "../styles/home.css";
+
 
 const Home = () => {
   const bannerStyle = {
@@ -57,7 +59,20 @@ const Home = () => {
           </div>
         </div>
       </div>
+       <div id="about">
+    <h2>About Institute</h2>
+     <p>Motilal Nehru National Institute of Technology (MNNIT), located in Allahabad (Prayagraj), India, is one of the premier technical institutions in the country. Established in 1961, MNNIT offers undergraduate, postgraduate, and doctoral programs in various branches of engineering, technology, management, and applied sciences.
+
+The institute is renowned for its quality education, research facilities, and infrastructure. It has a strong emphasis on innovation, entrepreneurship, and industry collaboration. MNNIT boasts a highly qualified faculty and provides a conducive environment for academic and extracurricular development.
+
+With its rich history and commitment to excellence, MNNIT continues to produce skilled professionals who contribute significantly to the fields of engineering, technology, and management.</p>
+<a href="http://www.mnnit.ac.in" class="more-link">
+    <button class="more-button">Official Website</button>
+  </a>
+ 
+    </div>
     </section>
+    
     // <div>
     //   <header style={{ backgroundColor: '#0f1924', color: '#fff', padding: '5px 0', textAlign: 'center' }}>
     //     <h1>Welcome to Complaint Portal</h1>
