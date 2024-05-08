@@ -1,0 +1,48 @@
+#about {
+    width: 90%; /* Adjust width as needed */
+    margin: 0 auto; /* Horizontally center the div */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center the content */
+    align-items: center; /* Horizontally center the content */
+    margin-top: 0%;
+  }
+  
+  #about p {
+    font-size: 16px; /* Increase font size as needed */
+    font-weight: bold; /* Bold the content */
+  }
+
+#about h2 {
+    color: blue;
+  }
+  
+  #about p {
+    /* Additional styling for paragraphs if needed */
+  }
+  body, h1, h2, p {
+    margin: 0;
+    padding: 0;
+  }
+  #about button {
+    color: blue;
+    display: block;
+    margin-top: 10px; /* Adjust as needed */
+    margin-left: 0; /* Ensures button starts from the left edge */
+  }
+  #about .more-button {
+    display: block;
+    margin-top: 0px; /* Adjust as needed */
+    margin-left: 0; /* Ensures button starts from the left edge */
+    padding: 10px 20px; /* Adjust padding as needed */
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Text color */
+    border: none; /* Remove button border */
+    border-radius: 5px; /* Add button border radius for rounded corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    text-decoration: none; /* Remove default text decoration */
+  }
+  
+  #about .more-button:hover {
+    background-color: #0056b3; /* Darker background color on hover */
+  }
