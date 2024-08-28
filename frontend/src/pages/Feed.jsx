@@ -46,42 +46,42 @@ const Feed = () => {
     }
   };
 
-  // const handleUpvote = async (complaintId) => {
-  //   try {
-  //     const token = Cookies.get("tokenf");
-  //     if (!token) {
-  //       toast.error("Please login first");
-  //       return;
-  //     }
-  //     const decodedToken = jwtDecode(token);
-  //     const { id: userId } = decodedToken;
+  const handleUpvote = async (complaintId) => {
+    try {
+      const token = Cookies.get("tokenf");
+      if (!token) {
+        toast.error("Please login first");
+        return;
+      }
+      const decodedToken = jwtDecode(token);
+      const { id: userId } = decodedToken;
 
-  //     if (userUpvotedComplaints.includes(complaintId)) {
-  //       await axios.post(`${server}/downvoteComplaint/${userId}`, {
-  //         complaintId,
-  //       });
-  //     } else {
-  //       await axios.post(`${server}/upvoteComplaint/${userId}`, {
-  //         complaintId,
-  //       });
-  //     }
+      if (userUpvotedComplaints.includes(complaintId)) {
+        await axios.post(`${server}/downvoteComplaint/${userId}`, {
+          complaintId,
+        });
+      } else {
+        await axios.post(`${server}/upvoteComplaint/${userId}`, {
+          complaintId,
+        });
+      }
 
-  //     fetchCommonComplaints();
-  //   } catch (error) {
-  //     console.error("Error upvoting/downvoting complaint:", error);
-  //   }
-  // };
+      fetchCommonComplaints();
+    } catch (error) {
+      console.error("Error upvoting/downvoting complaint:", error);
+    }
+  };
 
-  // const handleComment = (complaintId, comment) => {
-  //   // Implement comment functionality here
-  // };
+  const handleComment = (complaintId, comment) => {
+    // Implement comment functionality here
+  };
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1 style={{ marginBottom: "20px", textAlign: "center" }}>
+      <h1 style={{ marginBottom: "50px", textAlign: "center" }}>
         Common Complaints Feed
       </h1>
-      <Grid container spacing={3}>
+      <Grid container spacing={5}>
         {commonComplaints.map((complaint) => (
           <Grid item xs={12} sm={6} md={4} key={complaint._id}>
             <Card
@@ -91,6 +91,7 @@ const Feed = () => {
                 justifyContent: "space-between",
                 height: "100%",
                 borderRadius: 10,
+                width:"80%",
                 boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
                 transition: "0.3s",
                 "&:hover": {
@@ -100,11 +101,12 @@ const Feed = () => {
             >
               <CardMedia
                 component="img"
-                height="140"
+                // height="45"
                 image={complaint.image || BannerImage}
                 alt="Complaint Image"
+                style={{width:"80%",objectFit:"contain",margin:"auto",aspectRatio:"3/2"}}
               />
-              <CardContent>
+              <CardContent  style={{marginLeft:"20px"}}>
                 <Typography variant="h6" component="div">
                   {complaint.title}
                 </Typography>

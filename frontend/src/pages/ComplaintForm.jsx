@@ -74,7 +74,7 @@ const ComplaintForm = () => {
           toast.error("Error uploading image");
         }
       } else {
-        toast.error("Please select a file to upload");
+        // toast.error("Please select a file to upload");
       }
 
       const response = await axios.post(`${server}/createPersonalComplaint`, {
